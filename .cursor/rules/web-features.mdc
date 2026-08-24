@@ -1,0 +1,35 @@
+---
+description: Web の feature 境界。web/src を見る・レビューするときに適用する。
+alwaysApply: false
+globs: web/src/**
+---
+
+# Web Features — 配置
+
+Use this rule when reviewing or discussing files under `web/src/`.
+
+---
+
+## Iron Law(s)
+
+> **1. ToDo 専用ロジックは `features/todos` に閉じる。`lib` に画面固有を置かない。**
+
+---
+
+## Decision Table
+
+| 場所 | してよい | してはいけない |
+| --- | --- | --- |
+| `features/todos` | 画面、hooks、この機能の API 呼び出し | 他 feature の内部 import |
+| `providers/auth` | ログイン状態、ガード | ToDo の CRUD |
+| `lib/axios` | 共通クライアント、Bearer | 画面文言、ToDo 型 |
+| `lib/cognito` | サインイン SDK ラッパ | 一覧 UI |
+| `lib/react-query` | Query 共通 | 機能固有の URL 直書きを量産 |
+
+---
+
+## Examples
+
+- Good: コンポーネントは hook だけ呼び、パス文字列を持たない
+- Bad: ボタン onClick で `fetch('/todos')` を直書きし続ける（Day 19 以降）
+- Bad: `lib/axios` に ToDo の title バリデーションを置く

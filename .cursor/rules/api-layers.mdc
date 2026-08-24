@@ -1,0 +1,36 @@
+---
+description: API の層境界。api 配下を見る・レビューするときに適用する。
+alwaysApply: false
+globs: api/**
+---
+
+# API Layers — 責務分離
+
+Use this rule when reviewing or discussing files under `api/`.
+
+---
+
+## Iron Law(s)
+
+> **1. 各層は「しないこと」を破らない。後から層を足さない。**
+
+---
+
+## Decision Table
+
+| 層 | してよい | してはいけない |
+| --- | --- | --- |
+| `pkg/domain` | エンティティ、ドメイン規則 | HTTP、SQL、AWS SDK |
+| `pkg/application` | usecase、ポート（interface） | Echo / 具象 DB ドライバ / React |
+| `pkg/infra` | SQL、JWT/JWKS、外部 I/O | ユースケース判断 |
+| `pkg/interface` | handler、middleware | ビジネスルール |
+| `pkg/registry` | 生成と配線 | ロジック |
+| `pkg/interface/gen` | 生成物のみ | 手編集 |
+
+---
+
+## Examples
+
+- Good: handler が usecase を呼び、SQL は repository だけ
+- Bad: handler 内で `db.Query` する
+- Bad: usecase が `echo.Context` を受け取る
