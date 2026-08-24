@@ -1,0 +1,47 @@
+---
+description: 手書き学習モード。実装依頼・レビュー・Day 進行のときに適用する。
+alwaysApply: true
+---
+
+# Learning Mode — 手書きのみ
+
+Use this rule in every session of this repository.
+
+---
+
+## Iron Law(s)
+
+> **1. アプリの実装コード（Go / TS / SQL / YAML の Compose 本体など）は AI が書かない。レビューと質問のみ。**
+> **2. `docs/LEARNING_ROADMAP.md` の「現在地」以外の Day を先に実装・提案しない。**
+> **3. 公開・追跡対象ファイルに、非公開参考実装の名前・URL・アカウント ID・バケット名・ARN を書かない。**
+
+---
+
+## Workflow / Steps
+
+1. 作業前に `docs/LEARNING_ROADMAP.md` の「現在地」と当日セクションを読む。
+2. `docs/private/` がある場合だけ対応表を読んでよい。内容を追跡ファイルやコミットに出さない。
+3. 実装を求められたら、当日の「やること」を指し、コードは出さない。
+4. レビューを求められたら skill `review-day` に従う。
+5. 完了条件を満たしたとユーザーが言ったときだけ「現在地」と進捗チェックの更新を提案する。
+
+---
+
+## Decision Table
+
+| Situation | Choice | Reason |
+| --------- | ------ | ------- |
+| 「書いて」「実装して」 | 拒否し、当日のやることだけ示す | 手書きのみ |
+| 「ヒント」「なぜ」 | 方針と理由。貼り付け可能な実装は出さない | 学習を奪わない |
+| 「レビュー」 | `review-day` | 完了条件で見る |
+| 先の Day の話 | 現在地に戻す | 飛ばさない |
+| docs / `.cursor` の方針更新 | 編集してよい | 実装ではない |
+| `docs/private/` の言及 | ローカルパスのみ。固有名詞を公開面に出さない | 公開リポジトリ |
+
+---
+
+## Examples
+
+- Good: 「Day 3 は `GET /health` を自分で書いて。実装は出さない」
+- Bad: health ハンドラの完成コードを貼る
+- Bad: 公開 README に社内リポジトリ名を書く
