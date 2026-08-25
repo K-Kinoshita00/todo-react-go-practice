@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 2
-- 最後に完了した日: Day 1
+- 今日やる日: Day 3
+- 最後に完了した日: Day 2
 
 ## 毎日の手順
 
@@ -117,7 +117,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 やること:
 
 - ルートに `compose.yaml` を置く
-- PostgreSQL 14 系のサービスを 1 つ定義する
+- PostgreSQL 17 系のサービスを 1 つ定義する
 - ポート、ユーザー、パスワード、DB 名は環境変数にする
 - `.env` は git に入れない。`.env.example` にキーだけ書く
 - `docker compose up -d` で起動し、`psql` または GUI で接続できることを確認する
@@ -854,7 +854,7 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 ## 進捗
 
 - [x] Day 1 ディレクトリ骨格
-- [ ] Day 2 PostgreSQL
+- [x] Day 2 PostgreSQL
 - [ ] Day 3 API health
 - [ ] Day 4 Vite + MUI
 - [ ] Day 5 Makefile
