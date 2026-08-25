@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 3
-- 最後に完了した日: Day 2
+- 今日やる日: Day 4
+- 最後に完了した日: Day 3
 
 ## 毎日の手順
 
@@ -855,7 +855,7 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 
 - [x] Day 1 ディレクトリ骨格
 - [x] Day 2 PostgreSQL
-- [ ] Day 3 API health
+- [x] Day 3 API health
 - [ ] Day 4 Vite + MUI
 - [ ] Day 5 Makefile
 - [ ] Day 6 OpenAPI health

@@ -11,7 +11,7 @@ Use this rule in every session of this repository.
 
 ## Iron Law(s)
 
-> **1. アプリの実装コード（Go / TS / SQL / YAML の Compose 本体など）は AI が書かない。レビューと質問のみ。**
+> **1. アプリの完成実装（ファイル全体・完成関数・適用可能な差分パッチ）は AI が書かない。ヒントの一部コードは可。**
 > **2. `docs/LEARNING_ROADMAP.md` の「現在地」以外の Day を先に実装・提案しない。**
 > **3. 公開・追跡対象ファイルに、非公開参考実装の名前・URL・アカウント ID・バケット名・ARN を書かない。**
 
@@ -21,7 +21,7 @@ Use this rule in every session of this repository.
 
 1. 作業前に `docs/LEARNING_ROADMAP.md` の「現在地」と当日セクションを読む。
 2. `docs/private/` がある場合だけ対応表を読んでよい。内容を追跡ファイルやコミットに出さない。
-3. 実装を求められたら、当日の「やること」を指し、コードは出さない。
+3. 実装を求められたら、当日の「やること」を指す。完成コードは出さない。ヒントなら一部コード可。
 4. レビューを求められたら skill `review-day` に従う。
 5. 完了条件を満たしたとユーザーが言ったときだけ「現在地」と進捗チェックの更新を提案する。
 
@@ -31,8 +31,8 @@ Use this rule in every session of this repository.
 
 | Situation | Choice | Reason |
 | --------- | ------ | ------- |
-| 「書いて」「実装して」 | 拒否し、当日のやることだけ示す | 手書きのみ |
-| 「ヒント」「なぜ」 | 方針と理由。貼り付け可能な実装は出さない | 学習を奪わない |
+| 「書いて」「実装して」 | 拒否し、当日のやることだけ示す | 完成実装は手書き |
+| 「ヒント」「なぜ」 | 方針と理由。シグネチャ・骨格・断片は可。完成関数は出さない | 学習を奪わない |
 | 「レビュー」 | `review-day` | 完了条件で見る |
 | 先の Day の話 | 現在地に戻す | 飛ばさない |
 | docs / `.cursor` の方針更新 | 編集してよい | 実装ではない |
@@ -42,6 +42,7 @@ Use this rule in every session of this repository.
 
 ## Examples
 
-- Good: 「Day 3 は `GET /health` を自分で書いて。実装は出さない」
-- Bad: health ハンドラの完成コードを貼る
+- Good: 「Day 3 は `GET /health` を自分で書いて。完成実装は出さない」
+- Good: ヒントとしてシグネチャや 2–3 行の断片を出す
+- Bad: health ハンドラの完成関数や適用可能な差分パッチを貼る
 - Bad: 公開 README に社内リポジトリ名を書く

@@ -1,7 +1,7 @@
 ---
 name: review-day
 description: >-
-  当日の手書き実装を完了条件でレビューする。実装コードは書かない。
+  当日の手書き実装を完了条件でレビューする。完成実装は書かない。ヒントの一部コードは可。
   Load when the user asks for a review of the current Day, completion check, or
   handwritten code.
   Trigger: "レビュー", "見て", "完了条件", "Day", "review".
@@ -16,7 +16,7 @@ Use this skill when the user asks to review handwritten work. Follow `.cursor/ru
 
 ## Iron Law(s)
 
-> **1. 完成コード・差分パッチ・「こう書け」の実装は出さない。**
+> **1. 完成ファイル・完成関数・適用可能な差分パッチは出さない。ヒントの一部コード（シグネチャ・骨格・断片）は可。**
 > **2. 判定は `docs/LEARNING_ROADMAP.md` の当日「完了条件」だけを正とする。**
 
 ---
@@ -28,7 +28,7 @@ Use this skill when the user asks to review handwritten work. Follow `.cursor/ru
 3. `docs/private/` がある場合は当日の対応表だけ読む。固有名詞をレビュー文面に出さない。
 4. 層ルール（`api-layers` / `web-features`）に反していないか見る。
 5. 完了条件を 1 項目ずつ Pass / Fail にする。
-6. Fail は「どの条件が未達か」と「自分で直す場所（パス）」まで。書き方の全文は出さない。
+6. Fail は「どの条件が未達か」と「自分で直す場所（パス）」まで。必要なら一部コードで方針を示す。完成関数は出さない。
 7. すべて Pass なら「現在地」を次の Day にする更新を提案する。勝手に書き換えない。
 
 ---
@@ -42,7 +42,7 @@ Use this skill when the user asks to review handwritten work. Follow `.cursor/ru
 | 先の Day の実装がある | 残すなとは言わない。当日範囲外と注記 | 飛ばしていないか確認 |
 | 生成物を手編集している | Fail | 契約が単一ソース |
 | 公開ファイルに非公開痕跡 | Fail（High） | 公開リポジトリ |
-| ヒントを追加で求められた | 質問と方針。コードブロックの実装は出さない | 手書き |
+| ヒントを追加で求められた | 方針＋一部コード可。完成実装・パッチは出さない | 手書きを残す |
 
 ---
 
@@ -58,7 +58,7 @@ Day N: Pass | Fail
 - [ ] 条件: Pass | Fail — 一言
 
 ## 指摘
-- High | Medium | Low: ファイル — 何が方針に反するか（直す場所まで。実装は書かない）
+- High | Medium | Low: ファイル — 何が方針に反するか（直す場所まで。完成実装は書かない。一部ヒント可）
 
 ## 次
 Pass なら: 現在地を Day N+1 にするか確認する
@@ -70,5 +70,6 @@ Fail なら: 同じ Day を続ける
 ## Examples
 
 - Good: 「`api/pkg/interface/handler` が SQL を持っている。SQL は `infra/repository` へ」
-- Bad: repository の完成関数を貼る
+- Good: ヒントとしてシグネチャや 2–3 行の断片を出す（例: `func (r *todoRepository) List(ctx context.Context) ([]Todo, error)`）
+- Bad: repository の完成関数や適用可能な差分パッチを貼る
 - Bad: Day 21 の JWT 実装を Day 3 のレビューで要求する
