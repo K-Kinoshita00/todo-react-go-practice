@@ -117,7 +117,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 やること:
 
 - ルートに `compose.yaml` を置く
-- PostgreSQL 14 系のサービスを 1 つ定義する
+- PostgreSQL 17 系のサービスを 1 つ定義する
 - ポート、ユーザー、パスワード、DB 名は環境変数にする
 - `.env` は git に入れない。`.env.example` にキーだけ書く
 - `docker compose up -d` で起動し、`psql` または GUI で接続できることを確認する
