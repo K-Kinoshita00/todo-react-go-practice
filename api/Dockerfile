@@ -2,6 +2,7 @@ FROM golang:1.25.6
 
 WORKDIR /app
 
+# ローカルからイメージ内にコピー
 COPY . .
 
 RUN go build -o main ./cmd/server
