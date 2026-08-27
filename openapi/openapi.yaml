@@ -1,0 +1,31 @@
+openapi: 3.0.3
+
+info:
+  title: Todo API
+  version: 0.1.1
+  description: Todo API
+
+servers:
+  - url: 'http://localhost:8080'
+
+tags:
+  - name: Health
+
+paths:
+  /health:
+    get:
+      summary: Health Application check
+      tags:
+        - Health
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                    description: Status of the application
