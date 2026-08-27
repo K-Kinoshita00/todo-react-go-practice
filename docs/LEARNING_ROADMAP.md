@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 6
-- 最後に完了した日: Day 5
+- 今日やる日: Day 7
+- 最後に完了した日: Day 6
 
 ## 毎日の手順
 
@@ -858,7 +858,7 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 3 API health
 - [x] Day 4 Vite + MUI
 - [x] Day 5 Makefile
-- [ ] Day 6 OpenAPI health
+- [x] Day 6 OpenAPI health
 - [ ] Day 7 OpenAPI todos
 - [ ] Day 8 API コード生成
 - [ ] Day 9 Web コード生成
