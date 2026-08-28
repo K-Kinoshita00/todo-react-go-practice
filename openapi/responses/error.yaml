@@ -1,0 +1,34 @@
+BadRequest:
+  description: パラメータ不正など API 呼び出し側起因のエラー
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/error.yaml#/Error'
+
+Unauthorized:
+  description: API キーが未設定または不正もしくは失効済の場合のエラー
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/error.yaml#/Error'
+
+Forbidden:
+  description: アクセス権限がない場合のエラー
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/error.yaml#/Error'
+
+NotFound:
+  description: 指定されたリソースが存在しない場合のエラー
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/error.yaml#/Error'
+
+InternalServerError:
+  description: 予期せぬエラー
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/error.yaml#/Error'

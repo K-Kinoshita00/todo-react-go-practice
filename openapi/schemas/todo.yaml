@@ -1,0 +1,19 @@
+Todo:
+  type: object
+  required:
+    - id
+    - title
+    - status
+  properties:
+    id:
+      type: string
+      format: uuid
+    title:
+      type: string
+    status:
+      type: string
+      enum:
+        - not_started
+        - in_progress
+        - completed
+        - archive

@@ -1,0 +1,31 @@
+CreateTodoObjective:
+  type: object
+  required:
+    - title
+    - status
+  properties:
+    title:
+      type: string
+    status:
+      type: string
+      enum:
+        - not_started
+        - in_progress
+        - completed
+        - archive
+
+UpdateTodoObjective:
+  type: object
+  required:
+    - title
+    - status
+  properties:
+    title:
+      type: string
+    status:
+      type: string
+      enum:
+        - not_started
+        - in_progress
+        - completed
+        - archive

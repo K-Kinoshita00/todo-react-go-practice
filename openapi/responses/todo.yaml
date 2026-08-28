@@ -1,0 +1,22 @@
+TodoWithPagination:
+  description: Success response for Todo with pagination
+  content:
+    application/json:
+      schema:
+        allOf:
+          - type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/todo.yaml#/Todo'
+          - $ref: '../schemas/pagination.yaml#/Pagination'
+
+TodoObjective:
+  description: Success response for Todo
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/todo.yaml#/Todo'

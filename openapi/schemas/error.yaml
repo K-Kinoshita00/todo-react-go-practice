@@ -1,0 +1,14 @@
+Error:
+  type: object
+  required:
+    - status_code
+    - code
+    - message
+  properties:
+    status_code:
+      type: integer
+      x-go-type: int
+    code:
+      type: string
+    message:
+      type: string

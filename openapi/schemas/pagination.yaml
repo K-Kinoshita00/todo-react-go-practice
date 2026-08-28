@@ -1,0 +1,16 @@
+Pagination:
+  type: object
+  required:
+    - page_number
+    - page_size
+    - total
+  properties:
+    page_number:
+      type: integer
+      x-go-type: uint
+    page_size:
+      type: integer
+      x-go-type: int
+    total:
+      type: integer
+      x-go-type: uint
