@@ -25,7 +25,7 @@ Use this command when the user marks the current Day complete and wants `docs/LE
 1. `docs/LEARNING_ROADMAP.md` の「現在地」を読む。`今日やる日` を N、`最後に完了した日` を M とする。N が「なし」なら終了済みとして止める。
 2. 「進捗」の `- [ ] Day N` を `- [x] Day N` にする。すでに `[x]` ならチェックは触らない。
 3. `最後に完了した日` を `Day N` にする。
-4. N が 36 なら `今日やる日` を `なし` にする。それ以外は `Day N+1` にする。
+4. N が 41 なら `今日やる日` を `なし` にする。それ以外は `Day N+1` にする。
 5. 変更後の 2 行と進捗の該当行だけ確認する。
 
 ---
@@ -35,8 +35,8 @@ Use this command when the user marks the current Day complete and wants `docs/LE
 | Situation | Choice | Reason |
 | --- | --- | --- |
 | `今日やる日` が `なし` | ファイルを変えず、完了済みと伝える | これ以上ない |
-| N が 36 | 完了を Day 36、今日を `なし` | 全体完了 |
-| N が 1–35 | 完了を Day N、今日を Day N+1 | 1 日だけ進める |
+| N が 41 | 完了を Day 41、今日を `なし` | 全体完了 |
+| N が 1–40 | 完了を Day N、今日を Day N+1 | 1 日だけ進める |
 | 進捗の Day N が既に `[x]` | 現在地だけ直す | 二重チェックしない |
 
 ---

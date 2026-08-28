@@ -31,5 +31,5 @@ Use this rule when reviewing or discussing files under `web/src/`.
 ## Examples
 
 - Good: コンポーネントは hook だけ呼び、パス文字列を持たない
-- Bad: ボタン onClick で `fetch('/todos')` を直書きし続ける（Day 19 以降）
+- Bad: ボタン onClick で `fetch('/todos')` を直書きし続ける（Day 21 以降）
 - Bad: `lib/axios` に ToDo の title バリデーションを置く

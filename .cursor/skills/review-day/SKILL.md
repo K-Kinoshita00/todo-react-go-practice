@@ -72,4 +72,4 @@ Fail なら: 同じ Day を続ける
 - Good: 「`api/pkg/interface/handler` が SQL を持っている。SQL は `infra/repository` へ」
 - Good: ヒントとしてシグネチャや 2–3 行の断片を出す（例: `func (r *todoRepository) List(ctx context.Context) ([]Todo, error)`）
 - Bad: repository の完成関数や適用可能な差分パッチを貼る
-- Bad: Day 21 の JWT 実装を Day 3 のレビューで要求する
+- Bad: Day 24 の JWT 実装を Day 3 のレビューで要求する

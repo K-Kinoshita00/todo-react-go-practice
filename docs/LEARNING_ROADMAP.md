@@ -49,11 +49,11 @@
 2. LocalStack の Cognito User Pool + JWKS 検証
 3. 実 AWS Cognito（同じ interface）
 
-LocalStack コミュニティ版で Cognito が不足する場合は、無料枠の実 Cognito をローカルから使う。Day 23 で判断する。
+LocalStack コミュニティ版で Cognito が不足する場合は、無料枠の実 Cognito をローカルから使う。Day 26 で判断する。
 
 ### AWS（最後に載せる）
 
-ローカルで完成してからクラウドへ行く。Day 31 の請求アラームを飛ばさない。
+ローカルで完成してからクラウドへ行く。Day 36 の請求アラームを飛ばさない。
 
 無料枠に寄せる最終形:
 
@@ -220,7 +220,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 - `Todo` スキーマ（id, title, completed, createdAt など最小）
 - `GET /todos` / `POST /todos` / `GET /todos/{id}` / `PATCH /todos/{id}` / `DELETE /todos/{id}`
 - エラーレスポンスの形を 1 つ決める
-- 認証ヘッダはまだ必須にしない（Day 21 で足す）
+- 認証ヘッダはまだ必須にしない（Day 24 で足す）
 - 実装は書かない
 
 完了条件:
@@ -321,18 +321,37 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 - `todos` の insert / list / get / update / delete を repository に書く
 - インタフェースは application 側に置くか、domain のポートにする
 - handler から SQL を直接呼ばない
-- まだ HTTP に繋がない。テスト用の main や一時スクリプトでもよい
+- まだ HTTP に繋がない。確認は一時コードでよい
 
 完了条件:
 
-- repository 単体（または一時コード）で 1 件 insert し、list で取れる
+- repository が insert / list を持つ（確認は一時コードでよい）
 - SQL が handler / usecase に漏れていない
+
+翌日の入口: `api/pkg/infra/repository/` のテスト
+
+---
+
+## Day 13 — repository テスト
+
+目標: SQL の insert / list を `go test` で固定する。
+
+やること:
+
+- Compose の Postgres に対する repository テストを書く
+- insert した 1 件が get と list で取れることを断言する
+- handler / usecase は触らない
+
+完了条件:
+
+- `go test` が repository を通す
+- 失敗メッセージで何が壊れたか分かる
 
 翌日の入口: `api/pkg/domain/entity/` と `api/pkg/application/usecase/`
 
 ---
 
-## Day 13 — domain と usecase
+## Day 14 — domain と usecase
 
 目標: ユースケースが「何をするか」を持つ。
 
@@ -346,14 +365,14 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 完了条件:
 
-- usecase のテストまたは手元実行で、作成した ToDo が一覧に出る
+- 手元実行で、作成した ToDo が一覧に出る
 - usecase が `net/http` や Echo を import していない
 
 翌日の入口: `api/pkg/interface/handler/` と `api/pkg/registry/`
 
 ---
 
-## Day 14 — handler と registry
+## Day 15 — handler と registry
 
 目標: 生成インタフェースを実装し、DI で配線する。
 
@@ -369,11 +388,30 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 - サーバが生成インタフェース経由で todos を受け付ける
 - 新規依存の追加場所が registry だと説明できる
 
+翌日の入口: `api/pkg/interface/handler/` のテスト
+
+---
+
+## Day 16 — handler テスト
+
+目標: HTTP の入出力を `httptest` で固定する。
+
+やること:
+
+- usecase をモックまたはフェイクにする
+- 200 / 400 / 404 を断言する（空タイトルは 400、無い id は 404）
+- ビジネスルールは usecase 側のまま。handler に SQL を書かない
+
+完了条件:
+
+- `go test` が handler を通す
+- handler が SQL を直接呼んでいない
+
 翌日の入口: 起動中の API と Swagger UI
 
 ---
 
-## Day 15 — curl で CRUD
+## Day 17 — curl で CRUD
 
 目標: 未認証で ToDo の CRUD が通る。
 
@@ -393,27 +431,27 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 16 — 一覧 UI
+## Day 18 — 一覧 UI
 
 目標: MUI で ToDo 一覧が出る。
 
 やること:
 
 - 一覧画面を 1 枚作る
-- API の list を呼ぶ（fetch 直書きでよい。Query は Day 19）
+- API の list を呼ぶ（fetch 直書きでよい。Query は Day 21）
 - ローディング中の表示を 1 つ入れる
 - 作成フォームはまだ作らない
 
 完了条件:
 
-- ブラウザを開くと、Day 15 で作ったデータが見える
+- ブラウザを開くと、Day 17 で作ったデータが見える
 - API 停止時に画面が白くならない（エラー表示でよい）
 
 翌日の入口: 同じ一覧画面
 
 ---
 
-## Day 17 — 作成 UI
+## Day 19 — 作成 UI
 
 目標: 画面から ToDo を追加できる。
 
@@ -432,7 +470,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 18 — 更新と削除
+## Day 20 — 更新と削除
 
 目標: 完了トグルと削除ができる。
 
@@ -451,7 +489,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 19 — Query と features 整理
+## Day 21 — Query と features 整理
 
 目標: データ取得を hooks に寄せ、feature 境界を整える。
 
@@ -471,7 +509,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 20 — 空とエラー
+## Day 22 — 空とエラー
 
 目標: 正常系以外でも使える。
 
@@ -487,11 +525,31 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 - API を止めるとエラー状態が見える
 - 連打しても重複作成されない
 
+翌日の入口: `web/src/features/todos/` のテスト
+
+---
+
+## Day 23 — Web 単体テスト
+
+目標: 一覧・空・エラーを HTTP なしで固定する。
+
+やること:
+
+- Vitest と Testing Library を入れる
+- API はモックする。実サーバは起動しない
+- 一覧表示、0 件の空状態、エラー状態を断言する
+- ToDo 専用のテストは `features/todos` に閉じる
+
+完了条件:
+
+- Web のテストコマンドが通る
+- コンポーネントが実 API に依存しない
+
 翌日の入口: `api/pkg/application/authservice/` と `api/pkg/infra/auth/`
 
 ---
 
-## Day 21 — HS256 JWT
+## Day 24 — HS256 JWT
 
 目標: Bearer と claims を自前 JWT で理解する。
 
@@ -506,21 +564,21 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 完了条件:
 
 - トークンなしの todos は 401
-- 正しいトークンで Day 15 と同じ CRUD ができる
+- 正しいトークンで Day 17 と同じ CRUD ができる
 - usecase が JWT ライブラリを直接 import していない（infra / middleware 側）
 
 翌日の入口: `web/src/lib/axios/` と `web/src/providers/auth/`
 
 ---
 
-## Day 22 — Web が Bearer を付ける
+## Day 25 — Web が Bearer を付ける
 
 目標: 画面のリクエストにトークンが乗る。
 
 やること:
 
 - axios（または fetch ラッパ）の interceptor で Authorization を付ける
-- 開発中は発行した JWT を手元でセットしてよい（ログイン画面は Day 25）
+- 開発中は発行した JWT を手元でセットしてよい（ログイン画面は Day 28）
 - 401 のときの表示を 1 つ決める
 
 完了条件:
@@ -532,7 +590,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 23 — LocalStack と User Pool
+## Day 26 — LocalStack と User Pool
 
 目標: ローカルで Cognito 相当の User Pool を立てる。
 
@@ -553,7 +611,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 24 — JWKS 検証へ差し替え
+## Day 27 — JWKS 検証へ差し替え
 
 目標: AuthService の実装を JWKS 検証に替える。
 
@@ -566,7 +624,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 完了条件:
 
-- Day 23 のトークンで todos が通る
+- Day 26 のトークンで todos が通る
 - 改ざんトークンは 401
 - 「検証実装だけ替えた」と説明できる
 
@@ -574,7 +632,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 25 — ログイン画面
+## Day 28 — ログイン画面
 
 目標: 画面からサインインし、トークンを保持する。
 
@@ -594,7 +652,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 26 — 自分の ToDo だけ
+## Day 29 — 自分の ToDo だけ
 
 目標: `sub` で所有者を分ける。
 
@@ -614,7 +672,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 27 — バリデーション、CORS、ヘッダ
+## Day 30 — バリデーション、CORS、ヘッダ
 
 目標: 公開前の最低限の防御を入れる。
 
@@ -635,7 +693,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 28 — usecase テスト
+## Day 31 — usecase テスト
 
 目標: ビジネスルールを HTTP なしで固定する。
 
@@ -650,11 +708,49 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 - `go test` が usecase を通す
 - 失敗メッセージで何が壊れたか分かる
 
+翌日の入口: `api/pkg/interface/middleware/` のテスト
+
+---
+
+## Day 32 — auth middleware テスト
+
+目標: 未認証と他人の資源を HTTP で固定する。
+
+やること:
+
+- トークンなしの todos は 401
+- 他人の id は 404（存在を漏らさない）
+- `/health` は認証なしで 200 のまま
+
+完了条件:
+
+- `go test` が middleware（または handler + middleware）を通す
+- usecase が JWT ライブラリを直接 import していない
+
+翌日の入口: Web と API の E2E
+
+---
+
+## Day 33 — E2E
+
+目標: ログインして CRUD までをブラウザで固定する。
+
+やること:
+
+- Playwright（または同等）を 1 つ選んで固定する
+- Compose 上の web / api / db を使う
+- ログイン → 作成 → 一覧 → 更新 → 削除を 1 本のテストにする
+
+完了条件:
+
+- E2E が 1 本通る
+- 失敗時にどの操作で落ちたか分かる
+
 翌日の入口: `Makefile` の format / lint / 型チェック
 
 ---
 
-## Day 29 — format / lint / 型チェック
+## Day 34 — format / lint / 型チェック
 
 目標: CI に載せるコマンドをローカルで固定する。
 
@@ -662,25 +758,27 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 - API: `gofmt` と `go vet`（golangci-lint は任意）
 - Web: format、lint、`tsc --noEmit`
-- Makefile の `format` / `lint` / `test` を実装する
+- Makefile の `format` / `lint` / `test` を実装する（`go test` と Web 単体）
+- `make test-e2e` を足す
 - 生成物は lint 対象から外す
 
 完了条件:
 
 - `make format && make lint && make test` が通る
+- `make test-e2e` が通る
 - 意図的に壊すとどれかが失敗する
 
 翌日の入口: `.github/workflows/`
 
 ---
 
-## Day 30 — GitHub Actions
+## Day 35 — GitHub Actions
 
 目標: PR で品質チェックが回る。
 
 やること:
 
-- pull_request で lint / test を回す
+- pull_request で lint / test / e2e を回す
 - Node / Go のバージョンを固定する
 - シークレットを workflow に直書きしない
 - デプロイはまだしない
@@ -694,7 +792,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 31 — 請求アラームと最小 IAM
+## Day 36 — 請求アラームと最小 IAM
 
 目標: 課金を先に止める仕組みを作る。
 
@@ -715,7 +813,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 32 — 実 Cognito
+## Day 37 — 実 Cognito
 
 目標: ローカルアプリを実 User Pool に向ける。
 
@@ -735,7 +833,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 33 — S3 と CloudFront
+## Day 38 — S3 と CloudFront
 
 目標: 静的 Web を安く公開する。
 
@@ -755,7 +853,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 34 — API を安価ホスト
+## Day 39 — API を安価ホスト
 
 目標: API と Postgres を 1 台に載せる。
 
@@ -776,7 +874,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 35 — GitHub OIDC デプロイ
+## Day 40 — GitHub OIDC デプロイ
 
 目標: 長期アクセスキーなしでデプロイする。
 
@@ -796,7 +894,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ---
 
-## Day 36 — 費用確認と破棄手順
+## Day 41 — 費用確認と破棄手順
 
 目標: 残すものと消すものを固定する。
 
@@ -812,7 +910,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 - 不要リソースが残っていない
 - 翌月も残す場合の概算が言える
-- 「現在地」を Day 36 完了にする
+- 「現在地」を Day 41 完了にする
 
 翌日の入口: なし（全体完了）。必要なら下の「全体完了後に足してよいもの」へ。
 
@@ -820,7 +918,7 @@ ECS + ALB + RDS は理解用の短時間ラボにし、使い終わったら破�
 
 ## 全体完了後に足してよいもの
 
-Day 36 が終わるまで読まない。本線に載せず、層を壊さない範囲で 1 つずつ足す。
+Day 41 が終わるまで読まない。本線に載せず、層を壊さない範囲で 1 つずつ足す。
 
 ### 公開の穴
 
@@ -833,7 +931,7 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 
 - サインアップ、メール確認、パスワードリセット
 - リフレッシュトークンと、期限切れ時の再取得
-- ログアウトでサーバ側セッションまたはトークンを無効化するなら、その方針を 1 つに決める
+- ログアウトでサーバ側セッションまたはトークンを無効化するなら、その方針を 1 つ決める
 
 ### プロダクト
 
@@ -843,7 +941,6 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 
 ### 品質と運用
 
-- Playwright など E2E（ログインして CRUD まで）
 - staging を prod と分ける（プール、バケット、EC2 を混ぜない）
 - ECS + ALB + RDS は短時間ラボ。作り終わったら破棄する。常時起動しない
 
@@ -865,27 +962,32 @@ Day 36 が終わるまで読まない。本線に載せず、層を壊さない�
 - [ ] Day 10 Swagger UI
 - [ ] Day 11 マイグレーション
 - [ ] Day 12 repository
-- [ ] Day 13 domain / usecase
-- [ ] Day 14 handler / registry
-- [ ] Day 15 curl CRUD
-- [ ] Day 16 一覧 UI
-- [ ] Day 17 作成 UI
-- [ ] Day 18 更新・削除
-- [ ] Day 19 Query / features
-- [ ] Day 20 空とエラー
-- [ ] Day 21 HS256 JWT
-- [ ] Day 22 Web Bearer
-- [ ] Day 23 LocalStack User Pool
-- [ ] Day 24 JWKS 検証
-- [ ] Day 25 ログイン画面
-- [ ] Day 26 所有者分離
-- [ ] Day 27 バリデーション / CORS / ヘッダ
-- [ ] Day 28 usecase テスト
-- [ ] Day 29 format / lint / 型チェック
-- [ ] Day 30 GitHub Actions
-- [ ] Day 31 請求アラーム / IAM
-- [ ] Day 32 実 Cognito
-- [ ] Day 33 S3 / CloudFront
-- [ ] Day 34 安価ホスト
-- [ ] Day 35 OIDC デプロイ
-- [ ] Day 36 費用確認と破棄
+- [ ] Day 13 repository テスト
+- [ ] Day 14 domain / usecase
+- [ ] Day 15 handler / registry
+- [ ] Day 16 handler テスト
+- [ ] Day 17 curl CRUD
+- [ ] Day 18 一覧 UI
+- [ ] Day 19 作成 UI
+- [ ] Day 20 更新・削除
+- [ ] Day 21 Query / features
+- [ ] Day 22 空とエラー
+- [ ] Day 23 Web 単体テスト
+- [ ] Day 24 HS256 JWT
+- [ ] Day 25 Web Bearer
+- [ ] Day 26 LocalStack User Pool
+- [ ] Day 27 JWKS 検証
+- [ ] Day 28 ログイン画面
+- [ ] Day 29 所有者分離
+- [ ] Day 30 バリデーション / CORS / ヘッダ
+- [ ] Day 31 usecase テスト
+- [ ] Day 32 auth middleware テスト
+- [ ] Day 33 E2E
+- [ ] Day 34 format / lint / 型チェック
+- [ ] Day 35 GitHub Actions
+- [ ] Day 36 請求アラーム / IAM
+- [ ] Day 37 実 Cognito
+- [ ] Day 38 S3 / CloudFront
+- [ ] Day 39 安価ホスト
+- [ ] Day 40 OIDC デプロイ
+- [ ] Day 41 費用確認と破棄
