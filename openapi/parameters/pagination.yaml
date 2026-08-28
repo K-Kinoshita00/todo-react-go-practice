@@ -1,0 +1,17 @@
+PageNumber:
+  in: query
+  name: page_number
+  schema:
+    type: integer
+    default: 1
+    minimum: 1
+    x-go-type: uint
+
+PageSize:
+  in: query
+  name: page_size
+  description: If you want to fetch all records, specify a negative value.
+  schema:
+    type: integer
+    default: 1000
+    x-go-type: int

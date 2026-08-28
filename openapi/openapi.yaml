@@ -10,6 +10,7 @@ servers:
 
 tags:
   - name: Health
+  - name: Todo
 
 paths:
   /health:
@@ -29,3 +30,93 @@ paths:
                     type: string
                     example: ok
                     description: Status of the application
+
+  /todos:
+    get:
+      operationId: getTodoList
+      summary: get Todo list
+      tags:
+        - Todo
+      parameters:
+        - $ref: './parameters/pagination.yaml#/PageNumber'
+        - $ref: './parameters/pagination.yaml#/PageSize'
+      responses:
+        200:
+          $ref: './responses/todo.yaml#/TodoWithPagination'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    post:
+      operationId: createTodoObjective
+      summary: create Todo Objective
+      tags:
+        - Todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './parameters/todo.yaml#/CreateTodoObjective'
+      responses:
+        201:
+          $ref: './responses/success.yaml#/Created'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+  /todos/{id}:
+    get:
+      operationId: getTodoByID
+      summary: get Todo By ID
+      tags:
+        - Todo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      responses:
+        200:
+          $ref: './responses/todo.yaml#/TodoObjective'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    patch:
+      operationId: updateTodoObjective
+      summary: update Todo Objective
+      tags:
+        - Todo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './parameters/todo.yaml#/UpdateTodoObjective'
+      responses:
+        204:
+          $ref: './responses/success.yaml#/NoContent'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    delete:
+      operationId: deleteTodoObjective
+      summary: delete Todo Objective
+      tags:
+        - Todo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      responses:
+        204:
+          $ref: './responses/success.yaml#/NoContent'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'

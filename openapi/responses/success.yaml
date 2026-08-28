@@ -1,0 +1,9 @@
+Created:
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/todo.yaml#/Todo'
+  description: 作成したTodo Objectiveを返す
+
+NoContent:
+  description: 本文なし、更新または削除に成功
