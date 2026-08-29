@@ -23,4 +23,4 @@ gen:
 	npx --yes @redocly/cli@$(REDOC_CLI_VERSION) bundle openapi/openapi.yaml -o api/pkg/interface/gen/openapi/openapi.yaml
 	cd api && \
 	go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@$(OAPI_CODEGEN_VERSION) \
-	-config ./oapi-codegen.yaml pkg/interface/gen/openapi/openapi.yaml
+	-config ../openapi/oapi-codegen.yaml pkg/interface/gen/openapi/openapi.yaml

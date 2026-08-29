@@ -1,0 +1,5 @@
+package: openapi
+output: ../api/pkg/interface/gen/openapi/server.go
+generate:
+  models: true # スキーマをGoの型にする
+  std-http-server: true # HTTPサーバーを生成する
