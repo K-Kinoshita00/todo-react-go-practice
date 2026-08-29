@@ -1,3 +1,6 @@
+OAPI_CODEGEN_VERSION=v2.8.0
+REDOC_CLI_VERSION=2.49.0
+
 up:
 # ビルドして起動
 	docker compose build && docker compose up -d
@@ -15,3 +18,9 @@ ps:
 	docker compose ps
 
 lint:
+
+gen:
+	npx --yes @redocly/cli@$(REDOC_CLI_VERSION) bundle openapi/openapi.yaml -o api/pkg/interface/gen/openapi/openapi.yaml
+	cd api && \
+	go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@$(OAPI_CODEGEN_VERSION) \
+	-config ./oapi-codegen.yaml pkg/interface/gen/openapi/openapi.yaml

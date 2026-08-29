@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: Todo API
+  version: 0.1.1
+  description: Todo API
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Health
+  - name: Todo
+paths:
+  /health:
+    get:
+      summary: Health Application check
+      tags:
+        - Health
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                    description: Status of the application
+  /todos:
+    get:
+      operationId: getTodoList
+      summary: get Todo list
+      tags:
+        - Todo
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          $ref: '#/components/responses/TodoWithPagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createTodoObjective
+      summary: create Todo Objective
+      tags:
+        - Todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoObjective'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /todos/{id}:
+    get:
+      operationId: getTodoByID
+      summary: get Todo By ID
+      tags:
+        - Todo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      responses:
+        '200':
+          $ref: '#/components/responses/TodoObjective'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      operationId: updateTodoObjective
+      summary: update Todo Objective
+      tags:
+        - Todo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoObjective'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteTodoObjective
+      summary: delete Todo Objective
+      tags:
+        - Todo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  parameters:
+    PageNumber:
+      in: query
+      name: page_number
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        x-go-type: uint
+    PageSize:
+      in: query
+      name: page_size
+      description: If you want to fetch all records, specify a negative value.
+      schema:
+        type: integer
+        default: 1000
+        x-go-type: int
+    ID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    Error:
+      type: object
+      required:
+        - status_code
+        - code
+        - message
+      properties:
+        status_code:
+          type: integer
+          x-go-type: int
+        code:
+          type: string
+        message:
+          type: string
+    Todo:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - completed
+            - archive
+    Pagination:
+      type: object
+      required:
+        - page_number
+        - page_size
+        - total
+      properties:
+        page_number:
+          type: integer
+          x-go-type: uint
+        page_size:
+          type: integer
+          x-go-type: int
+        total:
+          type: integer
+          x-go-type: uint
+    CreateTodoObjective:
+      type: object
+      required:
+        - title
+        - status
+      properties:
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - completed
+            - archive
+    UpdateTodoObjective:
+      type: object
+      required:
+        - title
+        - status
+      properties:
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - completed
+            - archive
+  responses:
+    InternalServerError:
+      description: 予期せぬエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TodoWithPagination:
+      description: Success response for Todo with pagination
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+              - $ref: '#/components/schemas/Pagination'
+    BadRequest:
+      description: パラメータ不正など API 呼び出し側起因のエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Created:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Todo'
+      description: 作成したTodo Objectiveを返す
+    TodoObjective:
+      description: Success response for Todo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Todo'
+    NotFound:
+      description: 指定されたリソースが存在しない場合のエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NoContent:
+      description: 本文なし、更新または削除に成功
