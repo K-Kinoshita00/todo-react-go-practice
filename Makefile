@@ -20,6 +20,13 @@ ps:
 lint:
 
 gen:
+	make gen-web
+	make gen-api
+
+gen-web:
+	cd web && pnpm run gen
+
+gen-api:
 	npx --yes @redocly/cli@$(REDOC_CLI_VERSION) bundle openapi/openapi.yaml -o api/pkg/interface/gen/openapi/openapi.yaml
 	cd api && \
 	go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@$(OAPI_CODEGEN_VERSION) \
