@@ -3,7 +3,7 @@ REDOC_CLI_VERSION=2.49.0
 
 up:
 # ビルドして起動
-	docker compose build && docker compose up -d
+	make build && docker compose up -d
 
 down:
 	docker compose down
