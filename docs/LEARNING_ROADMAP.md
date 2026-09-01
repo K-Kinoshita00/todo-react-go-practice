@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 11
-- 最後に完了した日: Day 10
+- 今日やる日: Day 12
+- 最後に完了した日: Day 11
 
 ## 毎日の手順
 
@@ -960,7 +960,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 8 API コード生成
 - [x] Day 9 Web コード生成
 - [x] Day 10 Swagger UI
-- [ ] Day 11 マイグレーション
+- [x] Day 11 マイグレーション
 - [ ] Day 12 repository
 - [ ] Day 13 repository テスト
 - [ ] Day 14 domain / usecase
