@@ -9,7 +9,13 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes: # データベースのデータを保存するボリューム
       - database_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test:
+        ['CMD', 'pg_isready', '-U', '${POSTGRES_USER}', '-d', '${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
   api:
     build:
       context: ./api
@@ -34,6 +40,21 @@ services:
       - SWAGGER_JSON=/openapi/openapi.yaml
     volumes:
       - ./openapi:/openapi
+
+  migrate:
+    image: flyway/flyway:13.4.0
+    command: migrate
+    volumes:
+      - ./database/migrations:/flyway/sql # 公式の読み取り先
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://database:5432/${POSTGRES_DB}
+      - FLYWAY_USER=${POSTGRES_USER}
+      - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - migrate # このサービスを up から外す
 
 volumes:
   database_data:

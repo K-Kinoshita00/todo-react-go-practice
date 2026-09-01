@@ -31,3 +31,9 @@ gen-api:
 	cd api && \
 	go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@$(OAPI_CODEGEN_VERSION) \
 	-config ../openapi/oapi-codegen.yaml pkg/interface/gen/openapi/openapi.yaml
+
+migrate:
+	docker compose run --rm migrate
+
+migrate-reset:
+	docker compose run --rm -e FLYWAY_CLEAN_DISABLED=false migrate clean && make migrate
