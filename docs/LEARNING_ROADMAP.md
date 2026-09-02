@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 13
-- 最後に完了した日: Day 12
+- 今日やる日: Day 14
+- 最後に完了した日: Day 13
 
 ## 毎日の手順
 
@@ -962,7 +962,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 10 Swagger UI
 - [x] Day 11 マイグレーション
 - [x] Day 12 repository
-- [ ] Day 13 repository テスト
+- [x] Day 13 repository テスト
 - [ ] Day 14 domain / usecase
 - [ ] Day 15 handler / registry
 - [ ] Day 16 handler テスト

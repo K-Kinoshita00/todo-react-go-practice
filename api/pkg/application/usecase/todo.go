@@ -27,7 +27,7 @@ type UpdateTodo struct {
 }
 
 type TodoCommandRepository interface {
-	Insert(ctx context.Context, params InsertTodo) error
+	Insert(ctx context.Context, params InsertTodo) (uuid.UUID,error)
 	Update(ctx context.Context, params UpdateTodo) error
 	Delete(ctx context.Context, id uuid.UUID) error
 }
