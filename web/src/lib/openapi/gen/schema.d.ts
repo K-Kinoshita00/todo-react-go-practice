@@ -110,6 +110,8 @@ export interface components {
             status: "not_started" | "in_progress" | "completed" | "archive";
         };
         UpdateTodoObjective: {
+            /** Format: uuid */
+            id: string;
             title: string;
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";

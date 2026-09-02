@@ -17,9 +17,13 @@ CreateTodoObjective:
 UpdateTodoObjective:
   type: object
   required:
+    - id
     - title
     - status
   properties:
+    id:
+      type: string
+      format: uuid
     title:
       type: string
     status:
