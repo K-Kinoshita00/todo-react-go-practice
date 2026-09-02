@@ -121,6 +121,7 @@ type TodoStatus string
 
 // UpdateTodoObjective defines model for UpdateTodoObjective.
 type UpdateTodoObjective struct {
+	Id     openapi_types.UUID        `json:"id"`
 	Status UpdateTodoObjectiveStatus `json:"status"`
 	Title  string                    `json:"title"`
 }
