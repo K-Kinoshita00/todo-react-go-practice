@@ -17,9 +17,13 @@ func NewTodoCommandRepository(db *sql.DB) *TodoCommandRepository {
 	return &TodoCommandRepository{db: db}
 }
 
-func (r *TodoCommandRepository) Insert(ctx context.Context, params usecase.InsertTodo) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO todos (title, status) VALUES ($1, $2)`, params.Title, params.Status)
-	return err
+func (r *TodoCommandRepository) Insert(ctx context.Context, params usecase.InsertTodo) (uuid.UUID, error) {
+	var id uuid.UUID
+	err := r.db.QueryRowContext(ctx, `INSERT INTO todos (title, status) VALUES ($1, $2) RETURNING id`, params.Title, params.Status).Scan(&id)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	return id, nil
 }
 
 func (r *TodoCommandRepository) Update(ctx context.Context, params usecase.UpdateTodo) error {

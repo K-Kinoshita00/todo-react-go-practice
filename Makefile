@@ -37,3 +37,15 @@ migrate:
 
 migrate-reset:
 	docker compose run --rm -e FLYWAY_CLEAN_DISABLED=false migrate clean && make migrate
+
+test:
+	make test-web
+	make test-api
+
+test-web:
+
+test-api:
+	cd api && \
+	set -a && source ../.env && \
+	set +a && \
+	go test ./pkg/infra/repository/
