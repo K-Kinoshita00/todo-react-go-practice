@@ -6,16 +6,16 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 14
-- 最後に完了した日: Day 13
+- 今日やる日: Day 15
+- 最後に完了した日: Day 14
 
 ## 毎日の手順
 
 1. `/start-day` する（「現在地」の当日セクションだけ開く。完成実装は出さない）
 2. 手元に `docs/private/` がある場合だけ、当日の対応表を見る
 3. 手書きで実装する（AI にコードを書かせない）
-4. 「レビュー」と依頼する（`.cursor/skills/review-day` が当日の完了条件で見る。実装は返さない）
-5. 「レビュー」が Pass なら `/next-day`。振り返りの答えはこのチャットで書く（ロードマップには書かない）
+4. `/review-day` する（当日の完了条件と整合性だけ見る。実装は返さない）
+5. `/review-day` が Pass なら `/next-day`。振り返りの答えはこのチャットで書く（ロードマップには書かない）
 
 1 日は約 1 時間。終わらなければ同じ Day を翌日も続ける。先の Day は読まない。
 
@@ -1235,7 +1235,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 11 マイグレーション
 - [x] Day 12 repository
 - [x] Day 13 repository テスト
-- [ ] Day 14 domain / usecase
+- [x] Day 14 domain / usecase
 - [ ] Day 15 handler / registry
 - [ ] Day 16 handler テスト
 - [ ] Day 17 curl CRUD
