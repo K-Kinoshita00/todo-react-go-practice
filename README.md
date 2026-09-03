@@ -5,10 +5,10 @@
 ## 方針
 
 - 実装は手書きのみ
-- AI はレビューのみ使う（「レビュー」と頼む）
+- AI はレビューのみ使う（公式判定は `/review-day`）
 - 後から層を足さない。空でもディレクトリと責務は最初から置く
 - 1 日約 30 分。飛ばさず、終わらなければ翌日に持ち越す
-- Cursor は `.cursor/rules/` と `.cursor/skills/review-day/` がこの方針を強制する
+- Cursor は `.cursor/rules/` と `.cursor/commands/review-day.md` がこの方針を強制する
 
 進め方・日次計画・完了条件は [docs/LEARNING_ROADMAP.md](docs/LEARNING_ROADMAP.md) だけを読めば再開できます。
 
