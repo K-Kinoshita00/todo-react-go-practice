@@ -25,12 +25,6 @@ func NewTodo(
 	title string,
 	status TodoStatus,
 ) (*Todo, error) {
-	if title == "" {
-		return nil, errors.New("title is required")
-	}
-	if status == "" {
-		return nil, errors.New("status is required")
-	}
 	return &Todo{
 		ID:     uuid.New(),
 		Title:  title,
@@ -42,13 +36,17 @@ func (e *Todo) UpdateTitleAndStatus(
 	title string,
 	status TodoStatus,
 ) error {
-	if title == "" {
-		return errors.New("title is required")
-	}
-	if status == "" {
-		return errors.New("status is required")
-	}
 	e.Title = title
 	e.Status = status
+	return nil
+}
+
+func (e *Todo) Validate() error {
+	if e.Title == "" {
+		return errors.New("title is required")
+	}
+	if e.Status == "" {
+		return errors.New("status is required")
+	}
 	return nil
 }

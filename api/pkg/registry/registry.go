@@ -14,6 +14,15 @@ import (
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/handler"
 )
 
+type Handler struct {
+	*handler.HealthHandler
+	*handler.TodoHandler
+}
+
+func NewHandler() *Handler {
+	return &Handler{}
+}
+
 func getDSN() string {
 	postgresUser := os.Getenv("POSTGRES_USER")
 	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
@@ -32,6 +41,9 @@ func NewRegistry() (http.Handler, error) {
 	cmd := repository.NewTodoRepository(db)
 	query := repository.NewTodoQueryRepository(db)
 	uc := usecase.NewTodoUseCase(cmd, query)
-	h := handler.NewTodoHandler(uc)
+	h := &Handler{
+		HealthHandler: handler.NewHealthHandler(),
+		TodoHandler:   handler.NewTodoHandler(uc),
+	}
 	return openapi.Handler(h), nil
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
+	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/queryservice"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 )
@@ -20,38 +21,53 @@ func NewTodoUseCase(cmd TodoRepository, query queryservice.TodoQueryService) *To
 }
 
 func (u *TodoUseCase) Create(ctx context.Context, title string, status entity.TodoStatus) error {
-	newTodoEnt, err := entity.NewTodo(title, status)
-	if err != nil || newTodoEnt == nil {
+	ent, err := entity.NewTodo(title, status)
+	if err != nil || ent == nil {
 		return err
 	}
 
-	err = u.cmd.Insert(ctx, newTodoEnt)
-	return err
+	if res := ent.Validate(); res != nil {
+		return appErr.ErrBadRequest
+	}
+
+	if err = u.cmd.Insert(ctx, ent); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error {
 	ent, err := u.cmd.FindByID(ctx, id)
-	if err != nil || ent == nil {
-		return err
-	}
-
-	err = ent.UpdateTitleAndStatus(title, status)
 	if err != nil {
 		return err
 	}
+	if ent == nil {
+		return appErr.ErrNotFound
+	}
 
-	err = u.cmd.Update(ctx, ent)
-	return err
+	if err = ent.UpdateTitleAndStatus(title, status); err != nil {
+		return appErr.ErrBadRequest
+	}
+
+	if err = u.cmd.Update(ctx, ent); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *TodoUseCase) Delete(ctx context.Context, id uuid.UUID) error {
 	ent, err := u.cmd.FindByID(ctx, id)
-	if err != nil || ent == nil {
+	if err != nil {
 		return err
 	}
+	if ent == nil {
+		return appErr.ErrNotFound
+	}
 
-	err = u.cmd.Delete(ctx, id)
-	return err
+	if err = u.cmd.Delete(ctx, id); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *TodoUseCase) List(ctx context.Context) ([]*dto.Todo, error) {
@@ -66,6 +82,9 @@ func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, er
 	todo, err := u.query.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
+	}
+	if todo == nil {
+		return nil, appErr.ErrNotFound
 	}
 	return todo, nil
 }
