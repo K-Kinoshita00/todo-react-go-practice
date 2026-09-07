@@ -3,11 +3,13 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
+	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
@@ -72,7 +74,7 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var req openapi.CreateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
+		appErr := presenter.MapToAppError(ctx, fmt.Errorf("create todo json decode: %v: %w", err, appErr.ErrBadRequest))
 		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
@@ -90,7 +92,7 @@ func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id open
 	ctx := r.Context()
 	var req openapi.UpdateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
+		appErr := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
 		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
