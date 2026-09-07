@@ -18,7 +18,7 @@ func NewTodoQueryRepository(db *sql.DB) *TodoQueryRepository {
 }
 
 func (r *TodoQueryRepository) List(ctx context.Context) ([]*dto.Todo, error) {
-	rows, err := r.db.QueryContext(ctx, "SELECT id, title, status, created_at, updated_at FROM todos")
+	rows, err := r.db.QueryContext(ctx, "SELECT id, title, status FROM todos")
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (r *TodoQueryRepository) List(ctx context.Context) ([]*dto.Todo, error) {
 	var todos []*dto.Todo
 	for rows.Next() {
 		var t dto.Todo
-		err := rows.Scan(&t.ID, &t.Title, &t.Status, &t.CreatedAt, &t.UpdatedAt)
+		err := rows.Scan(&t.ID, &t.Title, &t.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -41,11 +41,11 @@ func (r *TodoQueryRepository) List(ctx context.Context) ([]*dto.Todo, error) {
 
 func (r *TodoQueryRepository) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
 	var t dto.Todo
-	res := r.db.QueryRowContext(ctx, `SELECT id, title, status, created_at, updated_at FROM todos WHERE id = $1`, id)
+	res := r.db.QueryRowContext(ctx, `SELECT id, title, status FROM todos WHERE id = $1`, id)
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
-	err := res.Scan(&t.ID, &t.Title, &t.Status, &t.CreatedAt, &t.UpdatedAt)
+	err := res.Scan(&t.ID, &t.Title, &t.Status)
 	if err != nil {
 		return nil, err
 	}

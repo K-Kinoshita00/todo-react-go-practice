@@ -53,11 +53,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** get Todo list */
-        get: operations["getTodoList"];
+        /** list Todos */
+        get: operations["listTodos"];
         put?: never;
-        /** create Todo Objective */
-        post: operations["createTodoObjective"];
+        /** create Todo */
+        post: operations["createTodo"];
         delete?: never;
         options?: never;
         head?: never;
@@ -75,12 +75,12 @@ export interface paths {
         get: operations["getTodoByID"];
         put?: never;
         post?: never;
-        /** delete Todo Objective */
-        delete: operations["deleteTodoObjective"];
+        /** delete Todo */
+        delete: operations["deleteTodo"];
         options?: never;
         head?: never;
-        /** update Todo Objective */
-        patch: operations["updateTodoObjective"];
+        /** update Todo */
+        patch: operations["updateTodo"];
         trace?: never;
     };
 }
@@ -104,14 +104,12 @@ export interface components {
             page_size: number;
             total: number;
         };
-        CreateTodoObjective: {
+        CreateTodo: {
             title: string;
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";
         };
-        UpdateTodoObjective: {
-            /** Format: uuid */
-            id: string;
+        UpdateTodo: {
             title: string;
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";
@@ -147,14 +145,12 @@ export interface components {
                 "application/json": components["schemas"]["Error"];
             };
         };
-        /** @description 作成したTodo Objectiveを返す */
+        /** @description 本文なし、作成に成功 */
         Created: {
             headers: {
                 [name: string]: unknown;
             };
-            content: {
-                "application/json": components["schemas"]["Todo"];
-            };
+            content?: never;
         };
         /** @description Success response for Todo */
         TodoObjective: {
@@ -194,7 +190,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getTodoList: {
+    listTodos: {
         parameters: {
             query?: {
                 page_number?: components["parameters"]["PageNumber"];
@@ -212,7 +208,7 @@ export interface operations {
             default: components["responses"]["InternalServerError"];
         };
     };
-    createTodoObjective: {
+    createTodo: {
         parameters: {
             query?: never;
             header?: never;
@@ -221,7 +217,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateTodoObjective"];
+                "application/json": components["schemas"]["CreateTodo"];
             };
         };
         responses: {
@@ -246,7 +242,7 @@ export interface operations {
             default: components["responses"]["InternalServerError"];
         };
     };
-    deleteTodoObjective: {
+    deleteTodo: {
         parameters: {
             query?: never;
             header?: never;
@@ -262,7 +258,7 @@ export interface operations {
             default: components["responses"]["InternalServerError"];
         };
     };
-    updateTodoObjective: {
+    updateTodo: {
         parameters: {
             query?: never;
             header?: never;
@@ -273,7 +269,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateTodoObjective"];
+                "application/json": components["schemas"]["UpdateTodo"];
             };
         };
         responses: {

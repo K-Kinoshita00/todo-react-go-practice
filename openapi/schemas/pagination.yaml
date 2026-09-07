@@ -7,10 +7,10 @@ Pagination:
   properties:
     page_number:
       type: integer
-      x-go-type: uint
+      x-go-type: int
     page_size:
       type: integer
       x-go-type: int
     total:
       type: integer
-      x-go-type: uint
+      x-go-type: int

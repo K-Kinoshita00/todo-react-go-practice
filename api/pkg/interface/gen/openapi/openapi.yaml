@@ -28,8 +28,8 @@ paths:
                     description: Status of the application
   /todos:
     get:
-      operationId: getTodoList
-      summary: get Todo list
+      operationId: listTodos
+      summary: list Todos
       tags:
         - Todo
       parameters:
@@ -43,8 +43,8 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
     post:
-      operationId: createTodoObjective
-      summary: create Todo Objective
+      operationId: createTodo
+      summary: create Todo
       tags:
         - Todo
       requestBody:
@@ -52,7 +52,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTodoObjective'
+              $ref: '#/components/schemas/CreateTodo'
       responses:
         '201':
           $ref: '#/components/responses/Created'
@@ -76,8 +76,8 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
     patch:
-      operationId: updateTodoObjective
-      summary: update Todo Objective
+      operationId: updateTodo
+      summary: update Todo
       tags:
         - Todo
       parameters:
@@ -87,7 +87,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateTodoObjective'
+              $ref: '#/components/schemas/UpdateTodo'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
@@ -98,8 +98,8 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
     delete:
-      operationId: deleteTodoObjective
-      summary: delete Todo Objective
+      operationId: deleteTodo
+      summary: delete Todo
       tags:
         - Todo
       parameters:
@@ -120,7 +120,7 @@ components:
         type: integer
         default: 1
         minimum: 1
-        x-go-type: uint
+        x-go-type: int
     PageSize:
       in: query
       name: page_size
@@ -179,14 +179,14 @@ components:
       properties:
         page_number:
           type: integer
-          x-go-type: uint
+          x-go-type: int
         page_size:
           type: integer
           x-go-type: int
         total:
           type: integer
-          x-go-type: uint
-    CreateTodoObjective:
+          x-go-type: int
+    CreateTodo:
       type: object
       required:
         - title
@@ -201,16 +201,12 @@ components:
             - in_progress
             - completed
             - archive
-    UpdateTodoObjective:
+    UpdateTodo:
       type: object
       required:
-        - id
         - title
         - status
       properties:
-        id:
-          type: string
-          format: uuid
         title:
           type: string
         status:
@@ -249,11 +245,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
     Created:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Todo'
-      description: 作成したTodo Objectiveを返す
+      description: 本文なし、作成に成功
     TodoObjective:
       description: Success response for Todo
       content:

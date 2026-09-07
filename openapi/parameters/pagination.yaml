@@ -5,7 +5,7 @@ PageNumber:
     type: integer
     default: 1
     minimum: 1
-    x-go-type: uint
+    x-go-type: int
 
 PageSize:
   in: query

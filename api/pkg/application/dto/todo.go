@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -16,9 +14,7 @@ const (
 )
 
 type Todo struct {
-	ID        uuid.UUID
-	Title     string
-	Status    TodoStatus
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID     uuid.UUID
+	Title  string
+	Status TodoStatus
 }

@@ -33,8 +33,8 @@ paths:
 
   /todos:
     get:
-      operationId: getTodoList
-      summary: get Todo list
+      operationId: listTodos
+      summary: list Todos
       tags:
         - Todo
       parameters:
@@ -49,8 +49,8 @@ paths:
           $ref: './responses/error.yaml#/InternalServerError'
 
     post:
-      operationId: createTodoObjective
-      summary: create Todo Objective
+      operationId: createTodo
+      summary: create Todo
       tags:
         - Todo
       requestBody:
@@ -58,7 +58,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './parameters/todo.yaml#/CreateTodoObjective'
+              $ref: './parameters/todo.yaml#/CreateTodo'
       responses:
         201:
           $ref: './responses/success.yaml#/Created'
@@ -84,8 +84,8 @@ paths:
           $ref: './responses/error.yaml#/InternalServerError'
 
     patch:
-      operationId: updateTodoObjective
-      summary: update Todo Objective
+      operationId: updateTodo
+      summary: update Todo
       tags:
         - Todo
       parameters:
@@ -95,7 +95,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: './parameters/todo.yaml#/UpdateTodoObjective'
+              $ref: './parameters/todo.yaml#/UpdateTodo'
       responses:
         204:
           $ref: './responses/success.yaml#/NoContent'
@@ -107,8 +107,8 @@ paths:
           $ref: './responses/error.yaml#/InternalServerError'
 
     delete:
-      operationId: deleteTodoObjective
-      summary: delete Todo Objective
+      operationId: deleteTodo
+      summary: delete Todo
       tags:
         - Todo
       parameters:

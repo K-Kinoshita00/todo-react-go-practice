@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 15
-- 最後に完了した日: Day 14
+- 今日やる日: Day 16
+- 最後に完了した日: Day 15
 
 ## 毎日の手順
 
@@ -1236,7 +1236,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 12 repository
 - [x] Day 13 repository テスト
 - [x] Day 14 domain / usecase
-- [ ] Day 15 handler / registry
+- [x] Day 15 handler / registry
 - [ ] Day 16 handler テスト
 - [ ] Day 17 curl CRUD
 - [ ] Day 18 一覧 UI
