@@ -14,24 +14,24 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
-// Defines values for CreateTodoObjectiveStatus.
+// Defines values for CreateTodoStatus.
 const (
-	CreateTodoObjectiveStatusArchive    CreateTodoObjectiveStatus = "archive"
-	CreateTodoObjectiveStatusCompleted  CreateTodoObjectiveStatus = "completed"
-	CreateTodoObjectiveStatusInProgress CreateTodoObjectiveStatus = "in_progress"
-	CreateTodoObjectiveStatusNotStarted CreateTodoObjectiveStatus = "not_started"
+	CreateTodoStatusArchive    CreateTodoStatus = "archive"
+	CreateTodoStatusCompleted  CreateTodoStatus = "completed"
+	CreateTodoStatusInProgress CreateTodoStatus = "in_progress"
+	CreateTodoStatusNotStarted CreateTodoStatus = "not_started"
 )
 
-// Valid indicates whether the value is a known member of the CreateTodoObjectiveStatus enum.
-func (e CreateTodoObjectiveStatus) Valid() bool {
+// Valid indicates whether the value is a known member of the CreateTodoStatus enum.
+func (e CreateTodoStatus) Valid() bool {
 	switch e {
-	case CreateTodoObjectiveStatusArchive:
+	case CreateTodoStatusArchive:
 		return true
-	case CreateTodoObjectiveStatusCompleted:
+	case CreateTodoStatusCompleted:
 		return true
-	case CreateTodoObjectiveStatusInProgress:
+	case CreateTodoStatusInProgress:
 		return true
-	case CreateTodoObjectiveStatusNotStarted:
+	case CreateTodoStatusNotStarted:
 		return true
 	default:
 		return false
@@ -62,38 +62,38 @@ func (e TodoStatus) Valid() bool {
 	}
 }
 
-// Defines values for UpdateTodoObjectiveStatus.
+// Defines values for UpdateTodoStatus.
 const (
-	UpdateTodoObjectiveStatusArchive    UpdateTodoObjectiveStatus = "archive"
-	UpdateTodoObjectiveStatusCompleted  UpdateTodoObjectiveStatus = "completed"
-	UpdateTodoObjectiveStatusInProgress UpdateTodoObjectiveStatus = "in_progress"
-	UpdateTodoObjectiveStatusNotStarted UpdateTodoObjectiveStatus = "not_started"
+	UpdateTodoStatusArchive    UpdateTodoStatus = "archive"
+	UpdateTodoStatusCompleted  UpdateTodoStatus = "completed"
+	UpdateTodoStatusInProgress UpdateTodoStatus = "in_progress"
+	UpdateTodoStatusNotStarted UpdateTodoStatus = "not_started"
 )
 
-// Valid indicates whether the value is a known member of the UpdateTodoObjectiveStatus enum.
-func (e UpdateTodoObjectiveStatus) Valid() bool {
+// Valid indicates whether the value is a known member of the UpdateTodoStatus enum.
+func (e UpdateTodoStatus) Valid() bool {
 	switch e {
-	case UpdateTodoObjectiveStatusArchive:
+	case UpdateTodoStatusArchive:
 		return true
-	case UpdateTodoObjectiveStatusCompleted:
+	case UpdateTodoStatusCompleted:
 		return true
-	case UpdateTodoObjectiveStatusInProgress:
+	case UpdateTodoStatusInProgress:
 		return true
-	case UpdateTodoObjectiveStatusNotStarted:
+	case UpdateTodoStatusNotStarted:
 		return true
 	default:
 		return false
 	}
 }
 
-// CreateTodoObjective defines model for CreateTodoObjective.
-type CreateTodoObjective struct {
-	Status CreateTodoObjectiveStatus `json:"status"`
-	Title  string                    `json:"title"`
+// CreateTodo defines model for CreateTodo.
+type CreateTodo struct {
+	Status CreateTodoStatus `json:"status"`
+	Title  string           `json:"title"`
 }
 
-// CreateTodoObjectiveStatus defines model for CreateTodoObjective.Status.
-type CreateTodoObjectiveStatus string
+// CreateTodoStatus defines model for CreateTodo.Status.
+type CreateTodoStatus string
 
 // Error defines model for Error.
 type Error struct {
@@ -104,9 +104,9 @@ type Error struct {
 
 // Pagination defines model for Pagination.
 type Pagination struct {
-	PageNumber uint `json:"page_number"`
-	PageSize   int  `json:"page_size"`
-	Total      uint `json:"total"`
+	PageNumber int `json:"page_number"`
+	PageSize   int `json:"page_size"`
+	Total      int `json:"total"`
 }
 
 // Todo defines model for Todo.
@@ -119,30 +119,26 @@ type Todo struct {
 // TodoStatus defines model for Todo.Status.
 type TodoStatus string
 
-// UpdateTodoObjective defines model for UpdateTodoObjective.
-type UpdateTodoObjective struct {
-	Id     openapi_types.UUID        `json:"id"`
-	Status UpdateTodoObjectiveStatus `json:"status"`
-	Title  string                    `json:"title"`
+// UpdateTodo defines model for UpdateTodo.
+type UpdateTodo struct {
+	Status UpdateTodoStatus `json:"status"`
+	Title  string           `json:"title"`
 }
 
-// UpdateTodoObjectiveStatus defines model for UpdateTodoObjective.Status.
-type UpdateTodoObjectiveStatus string
+// UpdateTodoStatus defines model for UpdateTodo.Status.
+type UpdateTodoStatus string
 
 // ID defines model for ID.
 type ID = openapi_types.UUID
 
 // PageNumber defines model for PageNumber.
-type PageNumber = uint
+type PageNumber = int
 
 // PageSize defines model for PageSize.
 type PageSize = int
 
 // BadRequest defines model for BadRequest.
 type BadRequest = Error
-
-// Created defines model for Created.
-type Created = Todo
 
 // InternalServerError defines model for InternalServerError.
 type InternalServerError = Error
@@ -156,45 +152,45 @@ type TodoObjective = Todo
 // TodoWithPagination defines model for TodoWithPagination.
 type TodoWithPagination struct {
 	Data       []Todo `json:"data"`
-	PageNumber uint   `json:"page_number"`
+	PageNumber int    `json:"page_number"`
 	PageSize   int    `json:"page_size"`
-	Total      uint   `json:"total"`
+	Total      int    `json:"total"`
 }
 
-// GetTodoListParams defines parameters for GetTodoList.
-type GetTodoListParams struct {
+// ListTodosParams defines parameters for ListTodos.
+type ListTodosParams struct {
 	PageNumber *PageNumber `form:"page_number,omitempty" json:"page_number,omitempty"`
 
 	// PageSize If you want to fetch all records, specify a negative value.
 	PageSize *PageSize `form:"page_size,omitempty" json:"page_size,omitempty"`
 }
 
-// CreateTodoObjectiveJSONRequestBody defines body for CreateTodoObjective for application/json ContentType.
-type CreateTodoObjectiveJSONRequestBody = CreateTodoObjective
+// CreateTodoJSONRequestBody defines body for CreateTodo for application/json ContentType.
+type CreateTodoJSONRequestBody = CreateTodo
 
-// UpdateTodoObjectiveJSONRequestBody defines body for UpdateTodoObjective for application/json ContentType.
-type UpdateTodoObjectiveJSONRequestBody = UpdateTodoObjective
+// UpdateTodoJSONRequestBody defines body for UpdateTodo for application/json ContentType.
+type UpdateTodoJSONRequestBody = UpdateTodo
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// GetHealth Health Application check
 	// (GET /health)
 	GetHealth(w http.ResponseWriter, r *http.Request)
-	// GetTodoList get Todo list
+	// ListTodos list Todos
 	// (GET /todos)
-	GetTodoList(w http.ResponseWriter, r *http.Request, params GetTodoListParams)
-	// CreateTodoObjective create Todo Objective
+	ListTodos(w http.ResponseWriter, r *http.Request, params ListTodosParams)
+	// CreateTodo create Todo
 	// (POST /todos)
-	CreateTodoObjective(w http.ResponseWriter, r *http.Request)
-	// DeleteTodoObjective delete Todo Objective
+	CreateTodo(w http.ResponseWriter, r *http.Request)
+	// DeleteTodo delete Todo
 	// (DELETE /todos/{id})
-	DeleteTodoObjective(w http.ResponseWriter, r *http.Request, id ID)
+	DeleteTodo(w http.ResponseWriter, r *http.Request, id ID)
 	// GetTodoByID get Todo By ID
 	// (GET /todos/{id})
 	GetTodoByID(w http.ResponseWriter, r *http.Request, id ID)
-	// UpdateTodoObjective update Todo Objective
+	// UpdateTodo update Todo
 	// (PATCH /todos/{id})
-	UpdateTodoObjective(w http.ResponseWriter, r *http.Request, id ID)
+	UpdateTodo(w http.ResponseWriter, r *http.Request, id ID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -220,14 +216,14 @@ func (siw *ServerInterfaceWrapper) GetHealth(w http.ResponseWriter, r *http.Requ
 	handler.ServeHTTP(w, r)
 }
 
-// GetTodoList operation middleware
-func (siw *ServerInterfaceWrapper) GetTodoList(w http.ResponseWriter, r *http.Request) {
+// ListTodos operation middleware
+func (siw *ServerInterfaceWrapper) ListTodos(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	_ = err
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetTodoListParams
+	var params ListTodosParams
 
 	// ------------- Optional query parameter "page_number" -------------
 
@@ -256,7 +252,7 @@ func (siw *ServerInterfaceWrapper) GetTodoList(w http.ResponseWriter, r *http.Re
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetTodoList(w, r, params)
+		siw.Handler.ListTodos(w, r, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -266,11 +262,11 @@ func (siw *ServerInterfaceWrapper) GetTodoList(w http.ResponseWriter, r *http.Re
 	handler.ServeHTTP(w, r)
 }
 
-// CreateTodoObjective operation middleware
-func (siw *ServerInterfaceWrapper) CreateTodoObjective(w http.ResponseWriter, r *http.Request) {
+// CreateTodo operation middleware
+func (siw *ServerInterfaceWrapper) CreateTodo(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.CreateTodoObjective(w, r)
+		siw.Handler.CreateTodo(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -280,8 +276,8 @@ func (siw *ServerInterfaceWrapper) CreateTodoObjective(w http.ResponseWriter, r 
 	handler.ServeHTTP(w, r)
 }
 
-// DeleteTodoObjective operation middleware
-func (siw *ServerInterfaceWrapper) DeleteTodoObjective(w http.ResponseWriter, r *http.Request) {
+// DeleteTodo operation middleware
+func (siw *ServerInterfaceWrapper) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	_ = err
@@ -296,7 +292,7 @@ func (siw *ServerInterfaceWrapper) DeleteTodoObjective(w http.ResponseWriter, r 
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.DeleteTodoObjective(w, r, id)
+		siw.Handler.DeleteTodo(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -332,8 +328,8 @@ func (siw *ServerInterfaceWrapper) GetTodoByID(w http.ResponseWriter, r *http.Re
 	handler.ServeHTTP(w, r)
 }
 
-// UpdateTodoObjective operation middleware
-func (siw *ServerInterfaceWrapper) UpdateTodoObjective(w http.ResponseWriter, r *http.Request) {
+// UpdateTodo operation middleware
+func (siw *ServerInterfaceWrapper) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 	_ = err
@@ -348,7 +344,7 @@ func (siw *ServerInterfaceWrapper) UpdateTodoObjective(w http.ResponseWriter, r 
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.UpdateTodoObjective(w, r, id)
+		siw.Handler.UpdateTodo(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -479,11 +475,11 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	}
 
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/health", wrapper.GetHealth)
-	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/todos", wrapper.GetTodoList)
-	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/todos", wrapper.CreateTodoObjective)
-	m.HandleFunc(http.MethodDelete+" "+options.BaseURL+"/todos/{id}", wrapper.DeleteTodoObjective)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/todos", wrapper.ListTodos)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/todos", wrapper.CreateTodo)
+	m.HandleFunc(http.MethodDelete+" "+options.BaseURL+"/todos/{id}", wrapper.DeleteTodo)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/todos/{id}", wrapper.GetTodoByID)
-	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/todos/{id}", wrapper.UpdateTodoObjective)
+	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/todos/{id}", wrapper.UpdateTodo)
 
 	return m
 }

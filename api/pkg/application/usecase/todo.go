@@ -62,6 +62,14 @@ func (u *TodoUseCase) List(ctx context.Context) ([]*dto.Todo, error) {
 	return todos, err
 }
 
+func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
+	todo, err := u.query.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return todo, nil
+}
+
 type TodoRepository interface {
 	Insert(ctx context.Context, params *entity.Todo) error
 	Update(ctx context.Context, params *entity.Todo) error

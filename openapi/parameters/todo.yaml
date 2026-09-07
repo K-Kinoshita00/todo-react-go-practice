@@ -1,4 +1,4 @@
-CreateTodoObjective:
+CreateTodo:
   type: object
   required:
     - title
@@ -14,16 +14,12 @@ CreateTodoObjective:
         - completed
         - archive
 
-UpdateTodoObjective:
+UpdateTodo:
   type: object
   required:
-    - id
     - title
     - status
   properties:
-    id:
-      type: string
-      format: uuid
     title:
       type: string
     status:
