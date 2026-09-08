@@ -85,7 +85,7 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
-	presenter.NewResponse(http.StatusNoContent, nil).Send(w)
+	presenter.NewResponse(http.StatusCreated, nil).Send(w)
 }
 
 func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
