@@ -1,26 +1,36 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
-	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/usecase"
+	"github.com/google/uuid"
+
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
+	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
 )
 
-type todoHandler struct {
-	uc *usecase.TodoUseCase
+// 外部が知る必要ないため小文字
+type TodoHandler struct {
+	uc TodoUseCase
 }
 
-func NewTodoHandler(uc *usecase.TodoUseCase) *todoHandler {
-	return &todoHandler{uc: uc}
+func NewTodoHandler(uc TodoUseCase) *TodoHandler {
+	return &TodoHandler{uc: uc}
 }
 
-func (h *todoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params openapi.ListTodosParams) {
-	todos, err := h.uc.List(r.Context())
+func (h *TodoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params openapi.ListTodosParams) {
+	ctx := r.Context()
+
+	todos, err := h.uc.List(ctx)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		appErr := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
 
@@ -40,14 +50,15 @@ func (h *todoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params o
 		PageSize:   len(resTodos),
 		Total:      len(resTodos),
 	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(body)
+	presenter.NewResponse(http.StatusOK, body).Send(w)
 }
 
-func (h *todoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi.ID) {
-	todo, err := h.uc.FindByID(r.Context(), id)
+func (h *TodoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi.ID) {
+	ctx := r.Context()
+	todo, err := h.uc.FindByID(ctx, id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		appErr := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
 
@@ -56,51 +67,60 @@ func (h *todoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id ope
 		Title:  todo.Title,
 		Status: openapi.TodoStatus(todo.Status),
 	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
+	presenter.NewResponse(http.StatusOK, res).Send(w)
 }
 
-func (h *todoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	var req openapi.CreateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		appErr := presenter.MapToAppError(ctx, fmt.Errorf("create todo json decode: %v: %w", err, appErr.ErrBadRequest))
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
 
-	err := h.uc.Create(r.Context(), req.Title, entity.TodoStatus(req.Status))
+	err := h.uc.Create(ctx, req.Title, entity.TodoStatus(req.Status))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		appErr := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
+	presenter.NewResponse(http.StatusCreated, nil).Send(w)
 }
 
-func (h *todoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
+func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
+	ctx := r.Context()
 	var req openapi.UpdateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		appErr := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
 
-	err := h.uc.Update(r.Context(), id, req.Title, entity.TodoStatus(req.Status))
+	err := h.uc.Update(ctx, id, req.Title, entity.TodoStatus(req.Status))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		appErr := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)
+	presenter.NewResponse(http.StatusNoContent, nil).Send(w)
 }
 
-func (h *todoHandler) DeleteTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
-	err := h.uc.Delete(r.Context(), id)
+func (h *TodoHandler) DeleteTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
+	ctx := r.Context()
+	err := h.uc.Delete(ctx, id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		appErr := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)
+	presenter.NewResponse(http.StatusNoContent, nil).Send(w)
 }
 
-func (h *todoHandler) GetHealth(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+type TodoUseCase interface {
+	Create(ctx context.Context, title string, status entity.TodoStatus) error
+	Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error
+	Delete(ctx context.Context, id uuid.UUID) error
+	List(ctx context.Context) ([]*dto.Todo, error)
+	FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error)
 }

@@ -19,6 +19,9 @@ ps:
 
 lint:
 
+fmt:
+	cd api && gofmt -w $$(go list -f '{{.Dir}}' ./...)
+
 gen:
 	make gen-web
 	make gen-api
