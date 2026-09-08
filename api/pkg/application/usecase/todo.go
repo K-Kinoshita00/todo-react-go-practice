@@ -2,8 +2,6 @@ package usecase
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 
 	"github.com/google/uuid"
 
@@ -41,9 +39,6 @@ func (u *TodoUseCase) Create(ctx context.Context, title string, status entity.To
 func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error {
 	ent, err := u.cmd.FindByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return appErr.ErrNotFound
-		}
 		return err
 	}
 	if ent == nil {
@@ -63,9 +58,6 @@ func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, st
 func (u *TodoUseCase) Delete(ctx context.Context, id uuid.UUID) error {
 	ent, err := u.cmd.FindByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return appErr.ErrNotFound
-		}
 		return err
 	}
 	if ent == nil {
@@ -89,9 +81,6 @@ func (u *TodoUseCase) List(ctx context.Context) ([]*dto.Todo, error) {
 func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
 	todo, err := u.query.FindByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, appErr.ErrNotFound
-		}
 		return nil, err
 	}
 	if todo == nil {

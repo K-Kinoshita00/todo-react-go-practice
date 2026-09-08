@@ -3,10 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/google/uuid"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
+	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 )
 
 type TodoQueryRepository struct {
@@ -47,6 +49,9 @@ func (r *TodoQueryRepository) FindByID(ctx context.Context, id uuid.UUID) (*dto.
 	}
 	err := res.Scan(&t.ID, &t.Title, &t.Status)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, appErr.ErrNotFound
+		}
 		return nil, err
 	}
 	return &t, nil
