@@ -48,5 +48,8 @@ func (e *Todo) Validate() error {
 	if e.Status == "" {
 		return errors.New("status is required")
 	}
+	if e.Status != TodoStatusNotStarted && e.Status != TodoStatusInProgress && e.Status != TodoStatusCompleted && e.Status != TodoStatusArchive {
+		return errors.New("status is invalid")
+	}
 	return nil
 }
