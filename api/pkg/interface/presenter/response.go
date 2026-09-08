@@ -18,6 +18,10 @@ func NewResponse(code int, body any) *Response {
 }
 
 func (r *Response) Send(w http.ResponseWriter) {
+	if r.body == nil {
+		w.WriteHeader(r.code)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(r.code)
 	json.NewEncoder(w).Encode(r.body)
