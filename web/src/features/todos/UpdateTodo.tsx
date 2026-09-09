@@ -10,11 +10,17 @@ import {
   Typography,
 } from '@mui/material'
 import { useState, useCallback } from 'react'
-import type { CreateTodo as CreateTodoParam } from '../../lib/openapi/gen/schema'
+import type {
+  Todo,
+  UpdateTodo as UpdateTodoParam,
+} from '../../lib/openapi/gen/schema'
 
-const createTodo = async (param: CreateTodoParam): Promise<Response> => {
-  return await fetch('/todos', {
-    method: 'POST',
+const updateTodo = async (
+  id: string,
+  param: UpdateTodoParam,
+): Promise<Response> => {
+  return await fetch(`/todos/${id}`, {
+    method: 'PATCH',
     body: JSON.stringify(param),
   })
     .then((res) => {
@@ -28,37 +34,35 @@ const createTodo = async (param: CreateTodoParam): Promise<Response> => {
     })
 }
 
-type CreateTodoProps = {
+type UpdateTodoProps = {
   open: boolean
   onClose: () => void
-  onCreated: () => void
+  onUpdated: () => void
+  todo: Todo
 }
 
-const CreateTodo = ({
+const UpdateTodo = ({
   open,
   onClose,
-  onCreated,
-}: CreateTodoProps): React.JSX.Element => {
-  const [title, setTitle] = useState('')
-  const [status, setStatus] = useState<CreateTodoParam['status']>('not_started')
+  onUpdated,
+  todo,
+}: UpdateTodoProps): React.JSX.Element => {
+  const [title, setTitle] = useState(todo.title)
+  const [status, setStatus] = useState(todo.status)
   const [error, setError] = useState<string | null>(null)
 
-  const handleCreate = useCallback(async () => {
+  const handleUpdate = useCallback(async () => {
     if (title.trim() === '') {
       setError('タイトルが未入力です')
       return
     }
-    const param: CreateTodoParam = {
-      title,
-      status,
-    }
-    await createTodo(param)
-    await onCreated()
-  }, [title, status, onCreated])
+    await updateTodo(todo.id, { title, status })
+    await onUpdated()
+  }, [title, status, todo.id, onUpdated])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
-      <DialogTitle>Todo 作成</DialogTitle>
+      <DialogTitle>Todo 更新</DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
@@ -84,11 +88,11 @@ const CreateTodo = ({
         <Button variant='contained' color='inherit' onClick={onClose}>
           キャンセル
         </Button>
-        <Button variant='contained' color='primary' onClick={handleCreate}>
-          作成
+        <Button variant='contained' color='primary' onClick={handleUpdate}>
+          更新
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
-export default CreateTodo
+export default UpdateTodo

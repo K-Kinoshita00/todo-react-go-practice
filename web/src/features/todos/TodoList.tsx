@@ -5,6 +5,8 @@ import type {
 } from '../../lib/openapi/gen/schema'
 import { Card, CardContent, Typography, Button } from '@mui/material'
 import CreateTodo from './CreateTodo'
+import UpdateTodo from './UpdateTodo'
+import DeleteTodo from './DeleteTodo'
 
 type TodoListBody = ResponseTodoWithPagination['content']['application/json']
 
@@ -42,11 +44,23 @@ const TodoList = (): React.JSX.Element => {
   const { todos, loading, error, refetch } = useTodoList()
 
   const [openCreateTodo, setOpenCreateTodo] = useState(false)
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null)
+  const [deleteTodo, setDeleteTodo] = useState<Todo | null>(null)
 
-  const onCreated = useCallback(async() => {
+  const onCreated = useCallback(async () => {
     await refetch()
     setOpenCreateTodo(false)
   }, [refetch, setOpenCreateTodo])
+
+  const onUpdated = useCallback(async () => {
+    await refetch()
+    setSelectedTodo(null)
+  }, [refetch, setSelectedTodo])
+
+  const onDeleted = useCallback(async () => {
+    await refetch()
+    setDeleteTodo(null)
+  }, [refetch, setDeleteTodo])
 
   if (error) {
     return <Typography color='error'>{error}</Typography>
@@ -64,12 +78,38 @@ const TodoList = (): React.JSX.Element => {
             <CardContent>
               <Typography variant='h6'>{todo.title}</Typography>
               <Typography>{todo.status}</Typography>
+              <Button type='button' onClick={() => setSelectedTodo(todo)}>
+                編集
+              </Button>
+              <Button type='button' color='error' onClick={() => setDeleteTodo(todo)}>
+                削除
+              </Button>
             </CardContent>
           </Card>
         ))
       )}
       {openCreateTodo && (
-        <CreateTodo open={openCreateTodo} onClose={() => setOpenCreateTodo(false)} onCreated={onCreated} />
+        <CreateTodo
+          open={openCreateTodo}
+          onClose={() => setOpenCreateTodo(false)}
+          onCreated={onCreated}
+        />
+      )}
+      {selectedTodo && (
+        <UpdateTodo
+          open={!!selectedTodo}
+          onClose={() => setSelectedTodo(null)}
+          onUpdated={onUpdated}
+          todo={selectedTodo}
+        />
+      )}
+      {deleteTodo && (
+        <DeleteTodo
+          open={!!deleteTodo}
+          onClose={() => setDeleteTodo(null)}
+          onDeleted={onDeleted}
+          todo={deleteTodo}
+        />
       )}
     </>
   )
