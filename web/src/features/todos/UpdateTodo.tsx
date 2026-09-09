@@ -10,9 +10,15 @@ import {
   Typography,
 } from '@mui/material'
 import { useState, useCallback } from 'react'
-import type { Todo, UpdateTodo as UpdateTodoParam } from '../../lib/openapi/gen/schema'
+import type {
+  Todo,
+  UpdateTodo as UpdateTodoParam,
+} from '../../lib/openapi/gen/schema'
 
-const updateTodo = async (id: string, param: UpdateTodoParam): Promise<Response> => {
+const updateTodo = async (
+  id: string,
+  param: UpdateTodoParam,
+): Promise<Response> => {
   return await fetch(`/todos/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(param),
@@ -35,7 +41,12 @@ type UpdateTodoProps = {
   todo: Todo
 }
 
-const UpdateTodo = ({ open, onClose, onUpdated, todo }: UpdateTodoProps): React.JSX.Element => {
+const UpdateTodo = ({
+  open,
+  onClose,
+  onUpdated,
+  todo,
+}: UpdateTodoProps): React.JSX.Element => {
   const [title, setTitle] = useState(todo.title)
   const [status, setStatus] = useState(todo.status)
   const [error, setError] = useState<string | null>(null)
