@@ -1,6 +1,5 @@
-import './App.css'
 import { Typography } from '@mui/material'
-import TodoList from './features/todos/list'
+import TodoList from './features/todos/TodoList'
 
 function App() {
   return (

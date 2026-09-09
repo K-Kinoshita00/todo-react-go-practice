@@ -1,18 +1,20 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type {
   Todo,
   ResponseTodoWithPagination,
 } from '../../lib/openapi/gen/schema'
-import { Card, CardContent, Typography } from '@mui/material'
+import { Card, CardContent, Typography, Button } from '@mui/material'
+import CreateTodo from './CreateTodo'
 
 type TodoListBody = ResponseTodoWithPagination['content']['application/json']
 
-function useTodoList() {
+const useTodoList = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  useEffect(() => {
-    fetch('/todos')
+
+  const refetchTodoList = async (): Promise<void> => {
+    return await fetch('/todos')
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`)
@@ -28,17 +30,32 @@ function useTodoList() {
       .finally(() => {
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    refetchTodoList()
   }, []) // 1 回だけ
-  return { todos, loading, error }
+  return { todos, loading, error, refetch: refetchTodoList }
 }
 
-const TodoList: React.FC = () => {
-  const { todos, loading, error } = useTodoList()
+const TodoList = (): React.JSX.Element => {
+  const { todos, loading, error, refetch } = useTodoList()
+
+  const [openCreateTodo, setOpenCreateTodo] = useState(false)
+
+  const onCreated = useCallback(async() => {
+    await refetch()
+    setOpenCreateTodo(false)
+  }, [refetch, setOpenCreateTodo])
+
   if (error) {
     return <Typography color='error'>{error}</Typography>
   }
   return (
     <>
+      <Button type='button' onClick={() => setOpenCreateTodo(true)}>
+        Todo 作成
+      </Button>
       {loading ? (
         <Typography>loading...</Typography>
       ) : (
@@ -50,6 +67,9 @@ const TodoList: React.FC = () => {
             </CardContent>
           </Card>
         ))
+      )}
+      {openCreateTodo && (
+        <CreateTodo open={openCreateTodo} onClose={() => setOpenCreateTodo(false)} onCreated={onCreated} />
       )}
     </>
   )

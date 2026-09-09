@@ -13,6 +13,7 @@ Use this rule when reviewing or discussing files under `web/src/`.
 ## Iron Law(s)
 
 > **1. ToDo 専用ロジックは `features/todos` に閉じる。`lib` に画面固有を置かない。**
+> **2. コンポーネントファイルは PascalCase（コンポーネント名と一致）。hooks は `useXxx.ts`。**
 
 ---
 
@@ -25,11 +26,14 @@ Use this rule when reviewing or discussing files under `web/src/`.
 | `lib/axios` | 共通クライアント、Bearer | 画面文言、ToDo 型 |
 | `lib/cognito` | サインイン SDK ラッパ | 一覧 UI |
 | `lib/react-query` | Query 共通 | 機能固有の URL 直書きを量産 |
+| ファイル名 | `TodoList.tsx` / `CreateTodo.tsx` / `useTodoList.ts` | `list.tsx` / `createTodo.tsx` |
 
 ---
 
 ## Examples
 
 - Good: コンポーネントは hook だけ呼び、パス文字列を持たない
+- Good: `TodoList.tsx` の export は `TodoList`
 - Bad: ボタン onClick で `fetch('/todos')` を直書きし続ける（Day 21 以降）
 - Bad: `lib/axios` に ToDo の title バリデーションを置く
+- Bad: コンポーネントを `list.tsx` / `createTodo.tsx` にする
