@@ -188,6 +188,21 @@ export interface components {
     headers: never;
     pathItems: never;
 }
+export type Error = components['schemas']['Error'];
+export type Todo = components['schemas']['Todo'];
+export type Pagination = components['schemas']['Pagination'];
+export type CreateTodo = components['schemas']['CreateTodo'];
+export type UpdateTodo = components['schemas']['UpdateTodo'];
+export type ResponseInternalServerError = components['responses']['InternalServerError'];
+export type ResponseTodoWithPagination = components['responses']['TodoWithPagination'];
+export type ResponseBadRequest = components['responses']['BadRequest'];
+export type ResponseCreated = components['responses']['Created'];
+export type ResponseTodoObjective = components['responses']['TodoObjective'];
+export type ResponseNotFound = components['responses']['NotFound'];
+export type ResponseNoContent = components['responses']['NoContent'];
+export type ParameterPageNumber = components['parameters']['PageNumber'];
+export type ParameterPageSize = components['parameters']['PageSize'];
+export type ParameterId = components['parameters']['ID'];
 export type $defs = Record<string, never>;
 export interface operations {
     listTodos: {
