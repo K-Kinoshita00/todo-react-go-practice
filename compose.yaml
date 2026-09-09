@@ -37,6 +37,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - ${WEB_PORT}:5173
+    volumes:
+      - ./web:/app
+      - /app/node_modules
 
   swagger-ui:
     image: swaggerapi/swagger-ui:v5.32.14
@@ -56,11 +59,29 @@ services:
       - FLYWAY_URL=jdbc:postgresql://database:5432/${POSTGRES_DB}
       - FLYWAY_USER=${POSTGRES_USER}
       - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql
     depends_on:
       database:
         condition: service_healthy
     profiles:
       - migrate # このサービスを up から外す
+
+  migrate-dummy:
+    image: flyway/flyway:13.4.0
+    command: migrate
+    volumes:
+      - ./database/migrations:/flyway/sql
+      - ./database/dummy:/flyway/dummy
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://database:5432/${POSTGRES_DB}
+      - FLYWAY_USER=${POSTGRES_USER}
+      - FLYWAY_PASSWORD=${POSTGRES_PASSWORD}
+      - FLYWAY_LOCATIONS=filesystem:/flyway/sql,filesystem:/flyway/dummy
+    depends_on:
+      database:
+        condition: service_healthy
+    profiles:
+      - migrate-dummy # このサービスを up から外す
 
 volumes:
   database_data:
