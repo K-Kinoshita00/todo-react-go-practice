@@ -10,38 +10,20 @@ import {
   Typography,
 } from '@mui/material'
 import { useState, useCallback } from 'react'
-import type { CreateTodo as CreateTodoParam } from '../../lib/openapi/gen/schema'
-
-const createTodo = async (param: CreateTodoParam): Promise<Response> => {
-  return await fetch('/todos', {
-    method: 'POST',
-    body: JSON.stringify(param),
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
-      }
-      return res
-    })
-    .catch((e) => {
-      throw new Error(e.message)
-    })
-}
+import type { CreateTodo as CreateTodoParam } from '../../../lib/openapi/gen/schema'
+import useCreateTodo from '../hooks/useCreateTodo'
 
 type CreateTodoProps = {
   open: boolean
   onClose: () => void
-  onCreated: () => void
 }
 
-const CreateTodo = ({
-  open,
-  onClose,
-  onCreated,
-}: CreateTodoProps): React.JSX.Element => {
+const CreateTodo = ({ open, onClose }: CreateTodoProps): React.JSX.Element => {
   const [title, setTitle] = useState('')
   const [status, setStatus] = useState<CreateTodoParam['status']>('not_started')
   const [error, setError] = useState<string | null>(null)
+
+  const { mutate: createTodo, error: createTodoError } = useCreateTodo()
 
   const handleCreate = useCallback(async () => {
     if (title.trim() === '') {
@@ -53,8 +35,12 @@ const CreateTodo = ({
       status,
     }
     await createTodo(param)
-    await onCreated()
-  }, [title, status, onCreated])
+    if (createTodoError) {
+      console.error(createTodoError)
+      return
+    }
+    onClose()
+  }, [title, status, createTodo, onClose, createTodoError])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
