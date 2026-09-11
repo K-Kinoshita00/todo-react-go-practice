@@ -28,20 +28,21 @@ const UpdateTodo = ({
   const [status, setStatus] = useState(todo.status)
   const [error, setError] = useState<string | null>(null)
 
-  const { mutate: updateTodo, error: updateTodoError } = useUpdateTodo()
+  const { mutateAsync: updateTodo, isPending } = useUpdateTodo()
 
   const handleUpdate = useCallback(async () => {
     if (title.trim() === '') {
       setError('タイトルが未入力です')
       return
     }
-    await updateTodo({ id: todo.id, title, status })
-    if (updateTodoError) {
-      console.error(updateTodoError)
-      return
+    try {
+      await updateTodo({ id: todo.id, title, status })
+      onClose()
+    } catch (e) {
+      console.error(e)
+      setError(String(e))
     }
-    onClose()
-  }, [title, status, todo.id, updateTodo, onClose, updateTodoError])
+  }, [title, status, todo.id, updateTodo, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -68,10 +69,20 @@ const UpdateTodo = ({
         {error && <Typography color='error'>{error}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' color='inherit' onClick={onClose}>
+        <Button
+          variant='contained'
+          color='inherit'
+          onClick={onClose}
+          disabled={isPending}
+        >
           キャンセル
         </Button>
-        <Button variant='contained' color='primary' onClick={handleUpdate}>
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={handleUpdate}
+          disabled={isPending}
+        >
           更新
         </Button>
       </DialogActions>

@@ -7,24 +7,28 @@ import DeleteTodo from './DeleteTodo'
 import useTodoList from '../hooks/useTodoList'
 
 const TodoList = (): React.JSX.Element => {
-  const { data: todos, isLoading, isError, error } = useTodoList()
+  const { data, isLoading, isError, error } = useTodoList()
 
   const [openCreateTodo, setOpenCreateTodo] = useState(false)
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null)
   const [deleteTodo, setDeleteTodo] = useState<Todo | null>(null)
 
-  if (isError) {
-    return <Typography color='error'>{error?.message}</Typography>
-  }
+  const todos = data?.data ?? []
+  const isView = !isError && !isLoading
+
   return (
     <>
       <Button type='button' onClick={() => setOpenCreateTodo(true)}>
         Todo 作成
       </Button>
-      {isLoading ? (
-        <Typography>loading...</Typography>
-      ) : (
-        todos?.data.map((todo) => (
+      {isError && <Typography color='error'>{error?.message}</Typography>}
+      {isLoading && <Typography>loading...</Typography>}
+      {isView && todos.length === 0 && (
+        <Typography>Todo がありません</Typography>
+      )}
+      {isView &&
+        todos.length > 0 &&
+        todos.map((todo) => (
           <Card key={todo.id} sx={{ margin: 2 }}>
             <CardContent>
               <Typography variant='h6'>{todo.title}</Typography>
@@ -41,8 +45,7 @@ const TodoList = (): React.JSX.Element => {
               </Button>
             </CardContent>
           </Card>
-        ))
-      )}
+        ))}
       {openCreateTodo && (
         <CreateTodo
           open={openCreateTodo}
