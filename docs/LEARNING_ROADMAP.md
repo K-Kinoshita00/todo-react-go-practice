@@ -55,7 +55,7 @@
 
 
 
-### /各層がしないこと
+### 各層がしないこと
 
 - `domain` — HTTP、SQL、AWS SDK を知らない
 - `application` — Echo / React / 具体的な DB ドライバを知らない
