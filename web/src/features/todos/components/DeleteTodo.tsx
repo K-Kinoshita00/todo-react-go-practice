@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from '@mui/material'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import type { Todo } from '../../../lib/openapi/gen/schema'
 import useDeleteTodo from '../hooks/useDeleteTodo'
 
@@ -21,28 +21,31 @@ const DeleteTodo = ({
   onClose,
   todo,
 }: DeleteTodoProps): React.JSX.Element => {
-  const { mutate: deleteTodo, error: deleteTodoError } = useDeleteTodo()
+  const [error, setError] = useState<string | null>(null)
+  const { mutateAsync: deleteTodo, isPending } = useDeleteTodo()
 
   const handleDelete = useCallback(async () => {
-    await deleteTodo(todo.id)
-    if (deleteTodoError) {
-      console.error(deleteTodoError)
-      return
+    try {
+      await deleteTodo(todo.id)
+      onClose()
+    } catch (e) {
+        console.error(e)
+        setError(String(e))
     }
-    onClose()
-  }, [todo.id, deleteTodo, onClose, deleteTodoError])
+  }, [todo.id, deleteTodo, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>Todo 削除</DialogTitle>
       <DialogContent>
         <Typography>Todo {todo.title} を削除しますか？</Typography>
+        {error && <Typography color='error'>{error}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' color='inherit' onClick={onClose}>
+        <Button variant='contained' color='inherit' onClick={onClose} disabled={isPending}>
           キャンセル
         </Button>
-        <Button variant='contained' color='error' onClick={handleDelete}>
+        <Button variant='contained' color='error' onClick={handleDelete} disabled={isPending} >
           削除
         </Button>
       </DialogActions>

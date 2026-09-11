@@ -23,7 +23,7 @@ const CreateTodo = ({ open, onClose }: CreateTodoProps): React.JSX.Element => {
   const [status, setStatus] = useState<CreateTodoParam['status']>('not_started')
   const [error, setError] = useState<string | null>(null)
 
-  const { mutate: createTodo, error: createTodoError } = useCreateTodo()
+  const { mutateAsync: createTodo, isPending } = useCreateTodo()
 
   const handleCreate = useCallback(async () => {
     if (title.trim() === '') {
@@ -34,13 +34,14 @@ const CreateTodo = ({ open, onClose }: CreateTodoProps): React.JSX.Element => {
       title,
       status,
     }
-    await createTodo(param)
-    if (createTodoError) {
-      console.error(createTodoError)
-      return
+    try {
+      await createTodo(param)
+      onClose()
+    } catch (e) {
+      console.error(e)
+      setError(String(e))
     }
-    onClose()
-  }, [title, status, createTodo, onClose, createTodoError])
+  }, [title, status, createTodo, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -67,10 +68,10 @@ const CreateTodo = ({ open, onClose }: CreateTodoProps): React.JSX.Element => {
         {error && <Typography color='error'>{error}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' color='inherit' onClick={onClose}>
+        <Button variant='contained' color='inherit' onClick={onClose} disabled={isPending}>
           キャンセル
         </Button>
-        <Button variant='contained' color='primary' onClick={handleCreate}>
+        <Button variant='contained' color='primary' onClick={handleCreate} disabled={isPending}>
           作成
         </Button>
       </DialogActions>
