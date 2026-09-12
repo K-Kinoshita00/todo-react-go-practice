@@ -42,8 +42,7 @@ migrate-reset:
 	docker compose run --rm -e FLYWAY_CLEAN_DISABLED=false migrate clean && make migrate
 
 test:
-	make test-web &&
-	make test-api
+	make test-web && make test-api
 
 test-web:
 	cd web && pnpm run test
