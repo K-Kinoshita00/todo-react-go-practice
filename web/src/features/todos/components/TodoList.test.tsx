@@ -1,18 +1,11 @@
 import { render, screen } from '@testing-library/react'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import TodoList from './TodoList'
 import useTodoList from '../hooks/useTodoList'
 
 vi.mock('../hooks/useTodoList', () => ({ default: vi.fn() }))
 
 describe('TodoList', () => {
-  beforeAll(() => {
-    vi.stubGlobal('fetch', vi.fn())
-  })
-  afterEach(() => {
-    vi.unstubAllGlobals()
-  })
-
   it('一覧を表示する', async () => {
     vi.mocked(useTodoList).mockReturnValue({
       data: {

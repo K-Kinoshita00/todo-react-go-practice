@@ -61,7 +61,7 @@ describe('useTodoList', () => {
     const { result } = renderHook(() => useTodoList(), {
       wrapper: createWrapper(),
     })
-    await waitFor(() => expect(result.current.isSuccess).toBe(false))
-    expect(result.current.status).toBe(500)
+    await waitFor(() => expect(result.current.isError).toBe(true))
+    expect(result.current.status).toBe('error')
   })
 })

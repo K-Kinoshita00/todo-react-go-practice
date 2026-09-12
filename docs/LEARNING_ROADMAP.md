@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 23
-- 最後に完了した日: Day 22
+- 今日やる日: Day 24
+- 最後に完了した日: Day 23
 
 ## 毎日の手順
 
@@ -42,6 +42,8 @@
 - openapi-typescript `7.13.0`
 - uuid（Go）`1.6.0`
 - TanStack Query `5.102.8`
+- Vitest `5.0.0`
+- Testing Library `16.3.3`
 
 
 
@@ -1257,7 +1259,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 20 更新・削除
 - [x] Day 21 Query / features
 - [x] Day 22 空とエラー
-- [ ] Day 23 Web 単体テスト
+- [x] Day 23 Web 単体テスト
 - [ ] Day 24 HS256 JWT
 - [ ] Day 25 Web Bearer
 - [ ] Day 26 LocalStack User Pool

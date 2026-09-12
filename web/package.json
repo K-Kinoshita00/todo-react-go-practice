@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "gen": "openapi-typescript ../openapi/openapi.yaml -o ./src/lib/openapi/gen/schema.d.ts --root-types --root-types-no-schema-prefix"
+    "gen": "openapi-typescript ../openapi/openapi.yaml -o ./src/lib/openapi/gen/schema.d.ts --root-types --root-types-no-schema-prefix",
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
