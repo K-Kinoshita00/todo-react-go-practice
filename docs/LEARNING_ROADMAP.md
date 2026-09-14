@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 24
-- 最後に完了した日: Day 23
+- 今日やる日: Day 25
+- 最後に完了した日: Day 24
 
 ## 毎日の手順
 
@@ -30,7 +30,7 @@
 下は当時入れた版の記録。これから足すものはこの表をコピーせず、その日の最新に近い版をピンする。
 
 - Node `26.0.0` / pnpm `11.24.0`
-- Go `1.25.6`
+- Go `1.27.1`
 - PostgreSQL `17.5`
 - React `19.2.8` / React DOM `19.2.8`
 - Vite `8.2.2`（作成: `pnpm create vite@8.2.2 web --template react-ts`）
@@ -44,6 +44,7 @@
 - TanStack Query `5.102.8`
 - Vitest `5.0.0`
 - Testing Library `16.3.3`
+- golang-jwt/jwt `5.3.1`
 
 
 
@@ -1260,7 +1261,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 21 Query / features
 - [x] Day 22 空とエラー
 - [x] Day 23 Web 単体テスト
-- [ ] Day 24 HS256 JWT
+- [x] Day 24 HS256 JWT
 - [ ] Day 25 Web Bearer
 - [ ] Day 26 LocalStack User Pool
 - [ ] Day 27 JWKS 検証

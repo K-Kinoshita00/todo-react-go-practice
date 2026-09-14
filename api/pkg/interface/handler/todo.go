@@ -29,8 +29,8 @@ func (h *TodoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params o
 
 	todos, err := h.uc.List(ctx)
 	if err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 
@@ -57,8 +57,8 @@ func (h *TodoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id ope
 	ctx := r.Context()
 	todo, err := h.uc.FindByID(ctx, id)
 	if err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 
@@ -74,15 +74,15 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var req openapi.CreateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		appErr := presenter.MapToAppError(ctx, fmt.Errorf("create todo json decode: %v: %w", err, appErr.ErrBadRequest))
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, fmt.Errorf("create todo json decode: %v: %w", err, appErr.ErrBadRequest))
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 
 	err := h.uc.Create(ctx, req.Title, entity.TodoStatus(req.Status))
 	if err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 	presenter.NewResponse(http.StatusCreated, nil).Send(w)
@@ -92,15 +92,15 @@ func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id open
 	ctx := r.Context()
 	var req openapi.UpdateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		appErr := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 
 	err := h.uc.Update(ctx, id, req.Title, entity.TodoStatus(req.Status))
 	if err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 	presenter.NewResponse(http.StatusNoContent, nil).Send(w)
@@ -110,8 +110,8 @@ func (h *TodoHandler) DeleteTodo(w http.ResponseWriter, r *http.Request, id open
 	ctx := r.Context()
 	err := h.uc.Delete(ctx, id)
 	if err != nil {
-		appErr := presenter.MapToAppError(ctx, err)
-		presenter.NewResponse(appErr.StatusCode, appErr).Send(w)
+		appError := presenter.MapToAppError(ctx, err)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
 	presenter.NewResponse(http.StatusNoContent, nil).Send(w)
