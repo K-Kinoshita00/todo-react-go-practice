@@ -1,13 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { axios } from '../../../lib/axios'
 
 const useDeleteTodo = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/todos/${id}`, {
-        method: 'DELETE',
-      })
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+      await axios.delete(`/todos/${id}`)
     },
     onSuccess: () => {
       // todoList の query のキャッシュを更新

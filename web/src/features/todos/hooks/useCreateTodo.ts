@@ -1,16 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CreateTodo } from '../../../lib/openapi/gen/schema'
+import {axios} from "../../../lib/axios"
 
 const useCreateTodo = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (param: CreateTodo) => {
-      const res = await fetch('/todos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(param),
-      })
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+      await axios.post('/todos', param)
     },
     onSuccess: () => {
       // todoList の query のキャッシュを更新
