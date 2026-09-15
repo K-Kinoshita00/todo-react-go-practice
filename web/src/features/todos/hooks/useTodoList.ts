@@ -1,16 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import type { ResponseTodoWithPagination } from '../../../lib/openapi/gen/schema'
+import { axios } from '../../../lib/axios'
 
 const useTodoList = () => {
   return useQuery({
     queryKey: ['todoList'],
     queryFn: async () => {
-      const res = await fetch('/todos', {
-        method: 'GET',
-      })
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+      const res = await axios.get('/todos')
       const body: ResponseTodoWithPagination['content']['application/json'] =
-        await res.json()
+        res.data
       return body
     },
   })
