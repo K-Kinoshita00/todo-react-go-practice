@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 26
-- 最後に完了した日: Day 25
+- 今日やる日: Day 27
+- 最後に完了した日: Day 26
 
 ## 毎日の手順
 
@@ -1166,7 +1166,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 23 Web 単体テスト
 - [x] Day 24 HS256 JWT
 - [x] Day 25 Web Bearer
-- [ ] Day 26 LocalStack User Pool
+- [x] Day 26 LocalStack User Pool
 - [ ] Day 27 JWKS 検証
 - [ ] Day 28 ログイン画面
 - [ ] Day 29 所有者分離
