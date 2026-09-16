@@ -84,5 +84,14 @@ services:
     profiles:
       - migrate-dummy # このサービスを up から外す
 
+  localstack:
+    image: localstack/localstack:2026.08
+    ports:
+      - ${LOCALSTACK_PORT}:4566
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+
 volumes:
   database_data:
