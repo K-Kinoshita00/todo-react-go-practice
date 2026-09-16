@@ -9,10 +9,10 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/usecase"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/infra/auth"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/infra/repository"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/handler"
-	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/infra/auth"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
 )
 
@@ -47,9 +47,19 @@ func NewRegistry() (http.Handler, error) {
 		HealthHandler: handler.NewHealthHandler(),
 		TodoHandler:   handler.NewTodoHandler(uc),
 	}
+	var authMode = os.Getenv("AUTH_MODE")
 	// JWT_SECRETを使ってHS256を初期化
-	authSvc := auth.NewHS256(os.Getenv("JWT_SECRET"))
-	// Bearerミドルウェアを適用
-	bearerHandler := middleware.Bearer(authSvc)(openapi.Handler(h))
+	if authMode == "hs256" {
+		authHS256 := auth.NewHS256(os.Getenv("JWT_SECRET"))
+		bearerHandler := middleware.Bearer(authHS256)(openapi.Handler(h))
+		return bearerHandler, nil
+	}
+	// JWKSを初期化
+	authJwks := auth.NewJWKS(
+		os.Getenv("JWKS_URL"),
+		os.Getenv("JWT_ISSUER"),
+		os.Getenv("JWT_AUDIENCE"),
+	)
+	bearerHandler := middleware.Bearer(authJwks)(openapi.Handler(h))
 	return bearerHandler, nil
 }
