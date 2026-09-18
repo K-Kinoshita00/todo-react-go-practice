@@ -1,10 +1,14 @@
-const STORAGE_KEY = "dev.jwt"
+const STORAGE_KEY = 'idToken'
 
 export const getToken = (): string | null => {
-  const token = localStorage.getItem(STORAGE_KEY)
+  const token = sessionStorage.getItem(STORAGE_KEY)
   return token
 }
 
 export const setToken = (token: string): void => {
-  localStorage.setItem(STORAGE_KEY, token)
+  sessionStorage.setItem(STORAGE_KEY, token)
+}
+
+export const clearToken = (): void => {
+  sessionStorage.removeItem(STORAGE_KEY)
 }

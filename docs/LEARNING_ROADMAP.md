@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 28
-- 最後に完了した日: Day 27
+- 今日やる日: Day 29
+- 最後に完了した日: Day 28
 
 ## 毎日の手順
 
@@ -46,6 +46,8 @@
 - Vitest `5.0.0`
 - Testing Library `16.3.3`
 - golang-jwt/jwt `5.3.1`
+- amazon-cognito-identity-js `6.3.20`
+- react-router `8.4.0`
 
 ### モノレポ
 
@@ -1168,7 +1170,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 25 Web Bearer
 - [x] Day 26 LocalStack User Pool
 - [x] Day 27 JWKS 検証
-- [ ] Day 28 ログイン画面
+- [x] Day 28 ログイン画面
 - [ ] Day 29 所有者分離
 - [ ] Day 30 バリデーション / CORS / ヘッダ
 - [ ] Day 31 usecase テスト
