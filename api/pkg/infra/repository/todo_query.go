@@ -19,8 +19,8 @@ func NewTodoQueryRepository(db *sql.DB) *TodoQueryRepository {
 	return &TodoQueryRepository{db: db}
 }
 
-func (r *TodoQueryRepository) List(ctx context.Context) ([]*dto.Todo, error) {
-	rows, err := r.db.QueryContext(ctx, "SELECT id, title, status FROM todos")
+func (r *TodoQueryRepository) List(ctx context.Context, owner string) ([]*dto.Todo, error) {
+	rows, err := r.db.QueryContext(ctx, "SELECT id, title, status FROM todos WHERE owner = $1", owner)
 	if err != nil {
 		return nil, err
 	}
@@ -41,9 +41,9 @@ func (r *TodoQueryRepository) List(ctx context.Context) ([]*dto.Todo, error) {
 	return todos, nil
 }
 
-func (r *TodoQueryRepository) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
+func (r *TodoQueryRepository) FindByID(ctx context.Context, id uuid.UUID, owner string) (*dto.Todo, error) {
 	var t dto.Todo
-	res := r.db.QueryRowContext(ctx, `SELECT id, title, status FROM todos WHERE id = $1`, id)
+	res := r.db.QueryRowContext(ctx, `SELECT id, title, status FROM todos WHERE id = $1 AND owner = $2`, id, owner)
 	if res.Err() != nil {
 		return nil, res.Err()
 	}

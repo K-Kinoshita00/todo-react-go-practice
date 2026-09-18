@@ -21,23 +21,23 @@ type fakeTodoUseCase struct {
 	err  error
 }
 
-func (f *fakeTodoUseCase) Create(ctx context.Context, title string, status entity.TodoStatus) error {
+func (f *fakeTodoUseCase) Create(ctx context.Context, title string, status entity.TodoStatus, owner string) error {
 	return f.err
 }
 
-func (f *fakeTodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error {
+func (f *fakeTodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus, owner string) error {
 	return f.err
 }
 
-func (f *fakeTodoUseCase) Delete(ctx context.Context, id uuid.UUID) error {
+func (f *fakeTodoUseCase) Delete(ctx context.Context, id uuid.UUID, owner string) error {
 	return f.err
 }
 
-func (f *fakeTodoUseCase) List(ctx context.Context) ([]*dto.Todo, error) {
+func (f *fakeTodoUseCase) List(ctx context.Context, owner string) ([]*dto.Todo, error) {
 	return f.list, f.err
 }
 
-func (f *fakeTodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
+func (f *fakeTodoUseCase) FindByID(ctx context.Context, id uuid.UUID, owner string) (*dto.Todo, error) {
 	for _, todo := range f.list {
 		if todo.ID == id {
 			return todo, f.err

@@ -4,6 +4,7 @@ Todo:
     - id
     - title
     - status
+    - owner
   properties:
     id:
       type: string

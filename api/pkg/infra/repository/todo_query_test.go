@@ -18,6 +18,7 @@ func TestTodoQueryRepositoryFindByID(t *testing.T) {
 	cmd := NewTodoRepository(db)
 
 	testTodoId := uuid.MustParse("01a06617-04db-72db-a2d7-894718bc83df")
+	testTodoOwner := "01a0b3be-5066-701b-8304-1ec0436ac032"
 	testTodoTitle := "test_todo"
 	testCmdTodoStatus := entity.TodoStatusNotStarted
 
@@ -25,11 +26,12 @@ func TestTodoQueryRepositoryFindByID(t *testing.T) {
 		ID:     testTodoId,
 		Title:  testTodoTitle,
 		Status: testCmdTodoStatus,
+		Owner:  testTodoOwner,
 	})
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
-	todo, err := query.FindByID(ctx, testTodoId)
+	todo, err := query.FindByID(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("FindByID: %v", err)
 	}
@@ -48,15 +50,18 @@ func TestTodoQueryRepositoryList(t *testing.T) {
 	query := NewTodoQueryRepository(db)
 	cmd := NewTodoRepository(db)
 
+	testTodoOwner := "01a0b3be-5066-701b-8304-1ec0436ac032"
 	TodoData1 := entity.Todo{
 		ID:     uuid.MustParse("01a0661e-8efc-7459-8323-6911fb746c92"),
 		Title:  "test_todo_1",
 		Status: entity.TodoStatusNotStarted,
+		Owner:  testTodoOwner,
 	}
 	TodoData2 := entity.Todo{
 		ID:     uuid.MustParse("01a0661e-d896-7408-909c-62df844936f4"),
 		Title:  "test_todo_2",
 		Status: entity.TodoStatusInProgress,
+		Owner:  testTodoOwner,
 	}
 	err := cmd.Insert(ctx, &TodoData1)
 	if err != nil {
@@ -67,7 +72,7 @@ func TestTodoQueryRepositoryList(t *testing.T) {
 		t.Fatalf("Insert: %v", err)
 	}
 
-	todos, err := query.List(ctx)
+	todos, err := query.List(ctx, testTodoOwner)
 	if err != nil {
 		t.Fatalf("List: %v", err)
 	}
