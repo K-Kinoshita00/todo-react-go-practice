@@ -1,10 +1,13 @@
-import TodoPage from './pages/Todo'
+import { Route, Routes } from 'react-router'
+import TodoPage from './pages/TodoPage'
+import LoginPage from './pages/LoginPage'
 
 function App() {
   return (
-    <>
-      <TodoPage />
-    </>
+    <Routes>
+      <Route path='/' element={<TodoPage />} />
+      <Route path='/login' element={<LoginPage />} />
+    </Routes>
   )
 }
 
