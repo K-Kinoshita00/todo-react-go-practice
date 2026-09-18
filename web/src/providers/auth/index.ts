@@ -1,4 +1,4 @@
-const STORAGE_KEY = "idToken"
+const STORAGE_KEY = 'idToken'
 
 export const getToken = (): string | null => {
   const token = sessionStorage.getItem(STORAGE_KEY)

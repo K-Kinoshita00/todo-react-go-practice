@@ -13,6 +13,9 @@ export default defineConfig({
         changeOrigin: true, // 転送先のHostヘッダをapi:8080に変更
       },
     },
+    watch:{
+      usePolling: true,
+    }
   },
   define: {
     global: 'globalThis',

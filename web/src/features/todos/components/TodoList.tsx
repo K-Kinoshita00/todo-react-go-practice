@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Todo } from '../../../lib/openapi/gen/schema'
-import { Card, CardContent, Typography, Button } from '@mui/material'
+import { Card, CardContent, Typography, Button, Box } from '@mui/material'
 import CreateTodo from './CreateTodo'
 import UpdateTodo from './UpdateTodo'
 import DeleteTodo from './DeleteTodo'
@@ -17,7 +17,9 @@ const TodoList = (): React.JSX.Element => {
   const isView = !isError && !isLoading
 
   return (
-    <>
+    <Box sx={{
+      width: "90vw",
+    }}>
       <Button type='button' onClick={() => setOpenCreateTodo(true)}>
         Todo 作成
       </Button>
@@ -66,7 +68,7 @@ const TodoList = (): React.JSX.Element => {
           todo={deleteTodo}
         />
       )}
-    </>
+    </Box>
   )
 }
 
