@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 )
 
 type TodoRepository struct {
@@ -39,11 +39,11 @@ func (r *TodoRepository) Delete(ctx context.Context, id uuid.UUID, owner string)
 
 func (r *TodoRepository) FindByID(ctx context.Context, id uuid.UUID, owner string) (*entity.Todo, error) {
 	var t entity.Todo
-	res := r.db.QueryRowContext(ctx, `SELECT id, title, status FROM todos WHERE id = $1 AND owner = $2`, id, owner)
+	res := r.db.QueryRowContext(ctx, `SELECT id, title, status, owner FROM todos WHERE id = $1 AND owner = $2`, id, owner)
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
-	err := res.Scan(&t.ID, &t.Title, &t.Status)
+	err := res.Scan(&t.ID, &t.Title, &t.Status, &t.Owner)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, appErr.ErrNotFound

@@ -12,7 +12,7 @@ import (
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
-	middleware "github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
 )
 

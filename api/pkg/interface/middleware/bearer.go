@@ -50,3 +50,7 @@ func ClaimsFromContext(ctx context.Context) (*authservice.Claims, bool) {
 	claims, ok := v.(*authservice.Claims)
 	return claims, ok
 }
+
+func ContextWithClaims(ctx context.Context, claims *authservice.Claims) context.Context {
+	return context.WithValue(ctx, claimsKey, claims)
+}

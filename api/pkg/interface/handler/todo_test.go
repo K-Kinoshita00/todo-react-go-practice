@@ -14,6 +14,8 @@ import (
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/authservice"
 )
 
 type fakeTodoUseCase struct {
@@ -60,6 +62,11 @@ func TestListTodos_OK(t *testing.T) {
 		err: nil,
 	})
 	req := httptest.NewRequest(http.MethodGet, "/todos", nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.ListTodos(rec, req, openapi.ListTodosParams{})
 	if rec.Code != http.StatusOK {
@@ -86,6 +93,11 @@ func TestListTodos_BadRequest(t *testing.T) {
 		err: testErr,
 	})
 	req := httptest.NewRequest(http.MethodGet, "/todos", nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.ListTodos(rec, req, openapi.ListTodosParams{})
 	if rec.Code != http.StatusBadRequest {
@@ -104,6 +116,11 @@ func TestGetTodoByID(t *testing.T) {
 		err: nil,
 	})
 	req := httptest.NewRequest(http.MethodGet, "/todos/"+testID.String(), nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.GetTodoByID(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusOK {
@@ -125,6 +142,11 @@ func TestGetTodoByID_NotFound(t *testing.T) {
 		err: appErr.ErrNotFound,
 	})
 	req := httptest.NewRequest(http.MethodGet, "/todos/"+testID.String(), nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.GetTodoByID(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusNotFound {
@@ -145,6 +167,11 @@ func TestCreateTodo_OK(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 	req := httptest.NewRequest(http.MethodPost, "/todos", bytes.NewBuffer(bodyBytes))
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.CreateTodo(rec, req)
 	if rec.Code != http.StatusCreated {
@@ -172,6 +199,11 @@ func TestCreateTodo_BadRequest(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 	req := httptest.NewRequest(http.MethodPost, "/todos", bytes.NewBuffer(bodyBytes))
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.CreateTodo(rec, req)
 	if rec.Code != http.StatusBadRequest {
@@ -193,6 +225,11 @@ func TestUpdateTodo_OK(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 	req := httptest.NewRequest(http.MethodPut, "/todos/"+testID.String(), bytes.NewBuffer(bodyBytes))
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.UpdateTodo(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusNoContent {
@@ -220,6 +257,11 @@ func TestUpdateTodo_BadRequest(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 	req := httptest.NewRequest(http.MethodPut, "/todos/"+testID.String(), bytes.NewBuffer(bodyBytes))
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.UpdateTodo(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusBadRequest {
@@ -241,6 +283,11 @@ func TestUpdateTodo_NotFound(t *testing.T) {
 		t.Fatalf("marshal: %v", err)
 	}
 	req := httptest.NewRequest(http.MethodPut, "/todos/"+testID.String(), bytes.NewBuffer(bodyBytes))
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.UpdateTodo(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusNotFound {
@@ -254,6 +301,11 @@ func TestDeleteTodo_OK(t *testing.T) {
 		err: nil,
 	})
 	req := httptest.NewRequest(http.MethodDelete, "/todos/"+testID.String(), nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.DeleteTodo(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusNoContent {
@@ -267,6 +319,11 @@ func TestDeleteTodo_NotFound(t *testing.T) {
 		err: appErr.ErrNotFound,
 	})
 	req := httptest.NewRequest(http.MethodDelete, "/todos/"+testID.String(), nil)
+	req = req.WithContext(
+		middleware.ContextWithClaims(req.Context(), &authservice.Claims{
+			Sub: "test_user",
+		}),
+	)
 	rec := httptest.NewRecorder()
 	h.DeleteTodo(rec, req, openapi.ID(testID))
 	if rec.Code != http.StatusNotFound {

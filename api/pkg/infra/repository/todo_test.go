@@ -12,7 +12,6 @@ import (
 
 func TestTodoRepositoryInsert(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close() // 終了後にDBを閉じる
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
@@ -30,6 +29,10 @@ func TestTodoRepositoryInsert(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
 
 	query := NewTodoQueryRepository(db)
 	todo, err := query.FindByID(ctx, testTodoId, testTodoOwner)
@@ -46,7 +49,6 @@ func TestTodoRepositoryInsert(t *testing.T) {
 
 func TestTodoRepositoryUpdate(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close() // 終了後にDBを閉じる
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
@@ -64,6 +66,11 @@ func TestTodoRepositoryUpdate(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
+
 	err = cmd.Update(ctx, &entity.Todo{
 		ID:     testTodoId,
 		Title:  testTodoTitle,
@@ -89,7 +96,6 @@ func TestTodoRepositoryUpdate(t *testing.T) {
 
 func TestTodoRepositoryDelete(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close()
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
@@ -107,6 +113,11 @@ func TestTodoRepositoryDelete(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
+
 	err = cmd.Delete(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("Delete: %v", err)

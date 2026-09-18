@@ -12,7 +12,6 @@ import (
 
 func TestTodoQueryRepositoryFindByID(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close()
 	ctx := context.Background()
 	query := NewTodoQueryRepository(db)
 	cmd := NewTodoRepository(db)
@@ -31,10 +30,16 @@ func TestTodoQueryRepositoryFindByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
+
 	todo, err := query.FindByID(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("FindByID: %v", err)
 	}
+
 	if todo.Title != testTodoTitle {
 		t.Fatalf("Title: got %v, want %v", todo.Title, testTodoTitle)
 	}
@@ -45,7 +50,9 @@ func TestTodoQueryRepositoryFindByID(t *testing.T) {
 
 func TestTodoQueryRepositoryList(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close()
+	t.Cleanup(func() {
+		db.Close()
+	})
 	ctx := context.Background()
 	query := NewTodoQueryRepository(db)
 	cmd := NewTodoRepository(db)
@@ -67,15 +74,23 @@ func TestTodoQueryRepositoryList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, TodoData1.ID, testTodoOwner)
+	})
+
 	err = cmd.Insert(ctx, &TodoData2)
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, TodoData2.ID, testTodoOwner)
+	})
 
 	todos, err := query.List(ctx, testTodoOwner)
 	if err != nil {
 		t.Fatalf("List: %v", err)
 	}
+
 	var found1, found2 dto.Todo
 	for _, todo := range todos {
 		if todo.ID == TodoData1.ID {
