@@ -8,12 +8,14 @@ import (
 
 	_ "github.com/lib/pq"
 
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/authservice"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/usecase"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/infra/auth"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/infra/repository"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/handler"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
 )
 
 type Handler struct {
@@ -48,18 +50,26 @@ func NewRegistry() (http.Handler, error) {
 		TodoHandler:   handler.NewTodoHandler(uc),
 	}
 	var authMode = os.Getenv("AUTH_MODE")
-	// JWT_SECRETを使ってHS256を初期化
+	var a authservice.AuthService
 	if authMode == "hs256" {
-		authHS256 := auth.NewHS256(os.Getenv("JWT_SECRET"))
-		bearerHandler := middleware.Bearer(authHS256)(openapi.Handler(h))
-		return bearerHandler, nil
+		// JWT_SECRETを使ってHS256を初期化
+		a = auth.NewHS256(os.Getenv("JWT_SECRET"))
+	} else {
+		// JWKSを初期化
+		a = auth.NewJWKS(
+			os.Getenv("JWKS_URL"),
+			os.Getenv("JWT_ISSUER"),
+			os.Getenv("JWT_AUDIENCE"),
+		)
 	}
-	// JWKSを初期化
-	authJwks := auth.NewJWKS(
-		os.Getenv("JWKS_URL"),
-		os.Getenv("JWT_ISSUER"),
-		os.Getenv("JWT_AUDIENCE"),
-	)
-	bearerHandler := middleware.Bearer(authJwks)(openapi.Handler(h))
-	return bearerHandler, nil
+	options := openapi.StdHTTPServerOptions{
+		BaseURL:          "",
+		BaseRouter:       nil,
+		Middlewares:      nil,
+		ErrorHandlerFunc: presenter.BindError,
+	}
+	bearerHandler := middleware.Bearer(a)(openapi.HandlerWithOptions(h, options))
+	corsHandler := middleware.CORS(os.Getenv("CORS_ORIGIN"))(bearerHandler)
+	securityHeadersHandler := middleware.SecurityHeaders()(corsHandler)
+	return securityHeadersHandler, nil
 }

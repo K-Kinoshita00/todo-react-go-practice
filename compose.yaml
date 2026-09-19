@@ -28,6 +28,7 @@ services:
       JWT_ISSUER: ${JWT_ISSUER}
       JWT_AUDIENCE: ${JWT_AUDIENCE}
       AUTH_MODE: ${AUTH_MODE}
+      CORS_ORIGIN: ${CORS_ORIGIN}
     build:
       context: ./api
       dockerfile: Dockerfile

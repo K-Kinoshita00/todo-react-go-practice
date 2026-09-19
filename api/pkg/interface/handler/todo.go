@@ -99,6 +99,11 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
+	if req.Title == "" || !req.Status.Valid() {
+		appError := presenter.MapToAppError(ctx, appErr.ErrBadRequest)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
 
 	err := h.uc.Create(ctx, req.Title, entity.TodoStatus(req.Status), claims.Sub)
 	if err != nil {
@@ -121,6 +126,11 @@ func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id open
 	var req openapi.UpdateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		appError := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
+	if req.Title == "" || !req.Status.Valid() {
+		appError := presenter.MapToAppError(ctx, appErr.ErrBadRequest)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
 		return
 	}
