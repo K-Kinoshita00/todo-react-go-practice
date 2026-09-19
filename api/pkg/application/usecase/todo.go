@@ -48,6 +48,9 @@ func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, st
 	if err = ent.UpdateTitleAndStatus(title, status); err != nil {
 		return appErr.ErrBadRequest
 	}
+	if res := ent.Validate(); res != nil {
+		return appErr.ErrBadRequest
+	}
 
 	if err = u.cmd.Update(ctx, ent); err != nil {
 		return err
