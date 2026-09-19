@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
@@ -8,6 +9,10 @@ import (
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
 )
+
+type ctxKey struct{}
+
+var claimsKey ctxKey
 
 func Bearer(auth authservice.AuthService) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -26,13 +31,26 @@ func Bearer(auth authservice.AuthService) func(http.Handler) http.Handler {
 				presenter.NewResponse(appError.StatusCode, appError).Send(w)
 				return
 			}
-			_, err := auth.Verify(r.Context(), token)
+			claims, err := auth.Verify(r.Context(), token)
 			if err != nil {
 				appError := presenter.MapToAppError(r.Context(), err)
 				presenter.NewResponse(appError.StatusCode, appError).Send(w)
 				return
 			}
-			next.ServeHTTP(w, r)
+			// claimsをcontextに追加
+			ctx := context.WithValue(r.Context(), claimsKey, claims)
+			// その Request を context を使って加工したもので次のハンドラに渡す
+			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func ClaimsFromContext(ctx context.Context) (*authservice.Claims, bool) {
+	v := ctx.Value(claimsKey)
+	claims, ok := v.(*authservice.Claims)
+	return claims, ok
+}
+
+func ContextWithClaims(ctx context.Context, claims *authservice.Claims) context.Context {
+	return context.WithValue(ctx, claimsKey, claims)
 }

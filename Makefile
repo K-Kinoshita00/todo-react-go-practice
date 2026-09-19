@@ -51,4 +51,4 @@ test-api:
 	cd api && \
 	set -a && source ../.env && \
 	set +a && \
-	go test ./pkg/infra/repository/
+	go test ./... -count=1

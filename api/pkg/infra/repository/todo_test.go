@@ -12,11 +12,11 @@ import (
 
 func TestTodoRepositoryInsert(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close() // 終了後にDBを閉じる
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
-	testTodoId := uuid.MustParse("01a06617-04db-72db-a2d7-894718bc83df")
+	testTodoId := uuid.MustParse("01a0b3df-50ff-711c-ba87-56fdcc3d2e4f")
+	testTodoOwner := "01a0b3be-5066-701b-8304-1ec0436ac032"
 	testTodoTitle := "test_todo"
 	testTodoStatus := entity.TodoStatusNotStarted
 
@@ -24,13 +24,18 @@ func TestTodoRepositoryInsert(t *testing.T) {
 		ID:     testTodoId,
 		Title:  testTodoTitle,
 		Status: testTodoStatus,
+		Owner:  testTodoOwner,
 	})
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
 
 	query := NewTodoQueryRepository(db)
-	todo, err := query.FindByID(ctx, testTodoId)
+	todo, err := query.FindByID(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("FindByID: %v", err)
 	}
@@ -44,11 +49,11 @@ func TestTodoRepositoryInsert(t *testing.T) {
 
 func TestTodoRepositoryUpdate(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close() // 終了後にDBを閉じる
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
-	testTodoId := uuid.MustParse("01a06617-04db-72db-a2d7-894718bc83df")
+	testTodoId := uuid.MustParse("01a0b3df-61e5-752c-ad6e-bbf9847ef764")
+	testTodoOwner := "01a0b3be-5066-701b-8304-1ec0436ac032"
 	testTodoTitle := "test_todo"
 	testTodoStatus := entity.TodoStatusNotStarted
 
@@ -56,21 +61,28 @@ func TestTodoRepositoryUpdate(t *testing.T) {
 		ID:     testTodoId,
 		Title:  testTodoTitle,
 		Status: testTodoStatus,
+		Owner:  testTodoOwner,
 	})
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
+
 	err = cmd.Update(ctx, &entity.Todo{
 		ID:     testTodoId,
 		Title:  testTodoTitle,
 		Status: entity.TodoStatusInProgress,
+		Owner:  testTodoOwner,
 	})
 	if err != nil {
 		t.Fatalf("Update: %v", err)
 	}
 
 	query := NewTodoQueryRepository(db)
-	todo, err := query.FindByID(ctx, testTodoId)
+	todo, err := query.FindByID(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("FindByID: %v", err)
 	}
@@ -84,11 +96,11 @@ func TestTodoRepositoryUpdate(t *testing.T) {
 
 func TestTodoRepositoryDelete(t *testing.T) {
 	db := dbSetup(t)
-	defer db.Close()
 	ctx := context.Background()
 	cmd := NewTodoRepository(db)
 
-	testTodoId := uuid.MustParse("01a06617-04db-72db-a2d7-894718bc83df")
+	testTodoId := uuid.MustParse("01a0b3df-7492-73eb-9d59-447d4e6f85a4")
+	testTodoOwner := "01a0b3be-5066-701b-8304-1ec0436ac032"
 	testTodoTitle := "test_todo"
 	testTodoStatus := entity.TodoStatusNotStarted
 
@@ -96,17 +108,23 @@ func TestTodoRepositoryDelete(t *testing.T) {
 		ID:     testTodoId,
 		Title:  testTodoTitle,
 		Status: testTodoStatus,
+		Owner:  testTodoOwner,
 	})
 	if err != nil {
 		t.Fatalf("Insert: %v", err)
 	}
-	err = cmd.Delete(ctx, testTodoId)
+	t.Cleanup(func() {
+		cmd.Delete(ctx, testTodoId, testTodoOwner)
+		db.Close()
+	})
+
+	err = cmd.Delete(ctx, testTodoId, testTodoOwner)
 	if err != nil {
 		t.Fatalf("Delete: %v", err)
 	}
 
 	query := NewTodoQueryRepository(db)
-	todos, err := query.List(ctx)
+	todos, err := query.List(ctx, testTodoOwner)
 	if err != nil {
 		t.Fatalf("List: %v", err)
 	}

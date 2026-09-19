@@ -20,8 +20,8 @@ func NewTodoUseCase(cmd TodoRepository, query queryservice.TodoQueryService) *To
 	return &TodoUseCase{cmd, query}
 }
 
-func (u *TodoUseCase) Create(ctx context.Context, title string, status entity.TodoStatus) error {
-	ent, err := entity.NewTodo(title, status)
+func (u *TodoUseCase) Create(ctx context.Context, title string, status entity.TodoStatus, owner string) error {
+	ent, err := entity.NewTodo(title, status, owner)
 	if err != nil || ent == nil {
 		return err
 	}
@@ -36,8 +36,8 @@ func (u *TodoUseCase) Create(ctx context.Context, title string, status entity.To
 	return nil
 }
 
-func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error {
-	ent, err := u.cmd.FindByID(ctx, id)
+func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus, owner string) error {
+	ent, err := u.cmd.FindByID(ctx, id, owner)
 	if err != nil {
 		return err
 	}
@@ -55,8 +55,8 @@ func (u *TodoUseCase) Update(ctx context.Context, id uuid.UUID, title string, st
 	return nil
 }
 
-func (u *TodoUseCase) Delete(ctx context.Context, id uuid.UUID) error {
-	ent, err := u.cmd.FindByID(ctx, id)
+func (u *TodoUseCase) Delete(ctx context.Context, id uuid.UUID, owner string) error {
+	ent, err := u.cmd.FindByID(ctx, id, owner)
 	if err != nil {
 		return err
 	}
@@ -64,22 +64,22 @@ func (u *TodoUseCase) Delete(ctx context.Context, id uuid.UUID) error {
 		return appErr.ErrNotFound
 	}
 
-	if err = u.cmd.Delete(ctx, id); err != nil {
+	if err = u.cmd.Delete(ctx, id, owner); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (u *TodoUseCase) List(ctx context.Context) ([]*dto.Todo, error) {
-	todos, err := u.query.List(ctx)
+func (u *TodoUseCase) List(ctx context.Context, owner string) ([]*dto.Todo, error) {
+	todos, err := u.query.List(ctx, owner)
 	if err != nil {
 		return nil, err
 	}
 	return todos, err
 }
 
-func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error) {
-	todo, err := u.query.FindByID(ctx, id)
+func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID, owner string) (*dto.Todo, error) {
+	todo, err := u.query.FindByID(ctx, id, owner)
 	if err != nil {
 		return nil, err
 	}
@@ -92,6 +92,6 @@ func (u *TodoUseCase) FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, er
 type TodoRepository interface {
 	Insert(ctx context.Context, params *entity.Todo) error
 	Update(ctx context.Context, params *entity.Todo) error
-	Delete(ctx context.Context, id uuid.UUID) error
-	FindByID(ctx context.Context, id uuid.UUID) (*entity.Todo, error)
+	Delete(ctx context.Context, id uuid.UUID, owner string) error
+	FindByID(ctx context.Context, id uuid.UUID, owner string) (*entity.Todo, error)
 }

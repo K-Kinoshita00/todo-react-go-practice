@@ -19,16 +19,19 @@ type Todo struct {
 	ID     uuid.UUID
 	Title  string
 	Status TodoStatus
+	Owner  string
 }
 
 func NewTodo(
 	title string,
 	status TodoStatus,
+	owner string,
 ) (*Todo, error) {
 	return &Todo{
 		ID:     uuid.New(),
 		Title:  title,
 		Status: status,
+		Owner:  owner,
 	}, nil
 }
 
@@ -50,6 +53,9 @@ func (e *Todo) Validate() error {
 	}
 	if e.Status != TodoStatusNotStarted && e.Status != TodoStatusInProgress && e.Status != TodoStatusCompleted && e.Status != TodoStatusArchive {
 		return errors.New("status is invalid")
+	}
+	if e.Owner == "" {
+		return errors.New("owner is required")
 	}
 	return nil
 }

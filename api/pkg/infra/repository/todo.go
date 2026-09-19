@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 )
 
 type TodoRepository struct {
@@ -20,7 +20,7 @@ func NewTodoRepository(db *sql.DB) *TodoRepository {
 }
 
 func (r *TodoRepository) Insert(ctx context.Context, params *entity.Todo) error {
-	_, err := r.db.ExecContext(ctx, `INSERT INTO todos (id,title, status) VALUES ($1, $2, $3)`, params.ID, params.Title, params.Status)
+	_, err := r.db.ExecContext(ctx, `INSERT INTO todos (id,title, status, owner) VALUES ($1, $2, $3, $4)`, params.ID, params.Title, params.Status, params.Owner)
 	if err != nil {
 		return err
 	}
@@ -28,22 +28,22 @@ func (r *TodoRepository) Insert(ctx context.Context, params *entity.Todo) error 
 }
 
 func (r *TodoRepository) Update(ctx context.Context, params *entity.Todo) error {
-	_, err := r.db.ExecContext(ctx, `UPDATE todos SET title = $1, status = $2, updated_at = NOW() WHERE id = $3`, params.Title, params.Status, params.ID)
+	_, err := r.db.ExecContext(ctx, `UPDATE todos SET title = $1, status = $2, updated_at = NOW() WHERE id = $3 AND owner = $4`, params.Title, params.Status, params.ID, params.Owner)
 	return err
 }
 
-func (r *TodoRepository) Delete(ctx context.Context, id uuid.UUID) error {
-	_, err := r.db.ExecContext(ctx, `DELETE FROM todos WHERE id = $1`, id)
+func (r *TodoRepository) Delete(ctx context.Context, id uuid.UUID, owner string) error {
+	_, err := r.db.ExecContext(ctx, `DELETE FROM todos WHERE id = $1 AND owner = $2`, id, owner)
 	return err
 }
 
-func (r *TodoRepository) FindByID(ctx context.Context, id uuid.UUID) (*entity.Todo, error) {
+func (r *TodoRepository) FindByID(ctx context.Context, id uuid.UUID, owner string) (*entity.Todo, error) {
 	var t entity.Todo
-	res := r.db.QueryRowContext(ctx, `SELECT id, title, status FROM todos WHERE id = $1`, id)
+	res := r.db.QueryRowContext(ctx, `SELECT id, title, status, owner FROM todos WHERE id = $1 AND owner = $2`, id, owner)
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
-	err := res.Scan(&t.ID, &t.Title, &t.Status)
+	err := res.Scan(&t.ID, &t.Title, &t.Status, &t.Owner)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, appErr.ErrNotFound

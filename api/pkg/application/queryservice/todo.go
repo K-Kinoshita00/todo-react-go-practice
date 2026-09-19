@@ -9,6 +9,6 @@ import (
 )
 
 type TodoQueryService interface {
-	List(ctx context.Context) ([]*dto.Todo, error)
-	FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error)
+	List(ctx context.Context, owner string) ([]*dto.Todo, error)
+	FindByID(ctx context.Context, id uuid.UUID, owner string) (*dto.Todo, error)
 }

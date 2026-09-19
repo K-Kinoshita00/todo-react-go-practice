@@ -12,6 +12,7 @@ import (
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/presenter"
 )
 
@@ -26,8 +27,14 @@ func NewTodoHandler(uc TodoUseCase) *TodoHandler {
 
 func (h *TodoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params openapi.ListTodosParams) {
 	ctx := r.Context()
+	claims, ok := middleware.ClaimsFromContext(ctx)
+	if !ok {
+		appError := presenter.MapToAppError(ctx, appErr.ErrUnauthorized)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
 
-	todos, err := h.uc.List(ctx)
+	todos, err := h.uc.List(ctx, claims.Sub)
 	if err != nil {
 		appError := presenter.MapToAppError(ctx, err)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
@@ -55,7 +62,14 @@ func (h *TodoHandler) ListTodos(w http.ResponseWriter, r *http.Request, params o
 
 func (h *TodoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi.ID) {
 	ctx := r.Context()
-	todo, err := h.uc.FindByID(ctx, id)
+	claims, ok := middleware.ClaimsFromContext(ctx)
+	if !ok {
+		appError := presenter.MapToAppError(ctx, appErr.ErrUnauthorized)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
+
+	todo, err := h.uc.FindByID(ctx, id, claims.Sub)
 	if err != nil {
 		appError := presenter.MapToAppError(ctx, err)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
@@ -72,6 +86,13 @@ func (h *TodoHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id ope
 
 func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	claims, ok := middleware.ClaimsFromContext(ctx)
+	if !ok {
+		appError := presenter.MapToAppError(ctx, appErr.ErrUnauthorized)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
+
 	var req openapi.CreateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		appError := presenter.MapToAppError(ctx, fmt.Errorf("create todo json decode: %v: %w", err, appErr.ErrBadRequest))
@@ -79,7 +100,7 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.uc.Create(ctx, req.Title, entity.TodoStatus(req.Status))
+	err := h.uc.Create(ctx, req.Title, entity.TodoStatus(req.Status), claims.Sub)
 	if err != nil {
 		appError := presenter.MapToAppError(ctx, err)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
@@ -90,6 +111,13 @@ func (h *TodoHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 
 func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
 	ctx := r.Context()
+	claims, ok := middleware.ClaimsFromContext(ctx)
+	if !ok {
+		appError := presenter.MapToAppError(ctx, appErr.ErrUnauthorized)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
+
 	var req openapi.UpdateTodo
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		appError := presenter.MapToAppError(ctx, fmt.Errorf("update todo json decode: %v: %w", err, appErr.ErrBadRequest))
@@ -97,7 +125,7 @@ func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id open
 		return
 	}
 
-	err := h.uc.Update(ctx, id, req.Title, entity.TodoStatus(req.Status))
+	err := h.uc.Update(ctx, id, req.Title, entity.TodoStatus(req.Status), claims.Sub)
 	if err != nil {
 		appError := presenter.MapToAppError(ctx, err)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
@@ -108,7 +136,14 @@ func (h *TodoHandler) UpdateTodo(w http.ResponseWriter, r *http.Request, id open
 
 func (h *TodoHandler) DeleteTodo(w http.ResponseWriter, r *http.Request, id openapi.ID) {
 	ctx := r.Context()
-	err := h.uc.Delete(ctx, id)
+	claims, ok := middleware.ClaimsFromContext(ctx)
+	if !ok {
+		appError := presenter.MapToAppError(ctx, appErr.ErrUnauthorized)
+		presenter.NewResponse(appError.StatusCode, appError).Send(w)
+		return
+	}
+
+	err := h.uc.Delete(ctx, id, claims.Sub)
 	if err != nil {
 		appError := presenter.MapToAppError(ctx, err)
 		presenter.NewResponse(appError.StatusCode, appError).Send(w)
@@ -118,9 +153,9 @@ func (h *TodoHandler) DeleteTodo(w http.ResponseWriter, r *http.Request, id open
 }
 
 type TodoUseCase interface {
-	Create(ctx context.Context, title string, status entity.TodoStatus) error
-	Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus) error
-	Delete(ctx context.Context, id uuid.UUID) error
-	List(ctx context.Context) ([]*dto.Todo, error)
-	FindByID(ctx context.Context, id uuid.UUID) (*dto.Todo, error)
+	Create(ctx context.Context, title string, status entity.TodoStatus, owner string) error
+	Update(ctx context.Context, id uuid.UUID, title string, status entity.TodoStatus, owner string) error
+	Delete(ctx context.Context, id uuid.UUID, owner string) error
+	List(ctx context.Context, owner string) ([]*dto.Todo, error)
+	FindByID(ctx context.Context, id uuid.UUID, owner string) (*dto.Todo, error)
 }
