@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 32
-- 最後に完了した日: Day 31
+- 今日やる日: Day 33
+- 最後に完了した日: Day 32
 
 ## 毎日の手順
 
@@ -1174,7 +1174,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 29 所有者分離
 - [x] Day 30 バリデーション / CORS / ヘッダ
 - [x] Day 31 usecase テスト
-- [ ] Day 32 auth middleware テスト
+- [x] Day 32 auth middleware テスト
 - [ ] Day 33 E2E
 - [ ] Day 34 format / lint / 型チェック
 - [ ] Day 35 GitHub Actions
