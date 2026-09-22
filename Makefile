@@ -52,3 +52,9 @@ test-api:
 	set -a && source ../.env && \
 	set +a && \
 	go test ./... -count=1
+
+test-e2e:
+	cd web && \
+	set -a && source ../.env && \
+	set +a && \
+	pnpm run test:e2e
