@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 33
-- 最後に完了した日: Day 32
+- 今日やる日: Day 34
+- 最後に完了した日: Day 33
 
 ## 毎日の手順
 
@@ -48,6 +48,7 @@
 - golang-jwt/jwt `5.3.1`
 - amazon-cognito-identity-js `6.3.20`
 - react-router `8.4.0`
+- playwright `1.63.0`
 
 ### モノレポ
 
@@ -1175,7 +1176,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 30 バリデーション / CORS / ヘッダ
 - [x] Day 31 usecase テスト
 - [x] Day 32 auth middleware テスト
-- [ ] Day 33 E2E
+- [x] Day 33 E2E
 - [ ] Day 34 format / lint / 型チェック
 - [ ] Day 35 GitHub Actions
 - [ ] Day 36 請求アラーム / IAM

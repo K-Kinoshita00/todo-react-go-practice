@@ -50,7 +50,7 @@ const UpdateTodo = ({
       <DialogContent>
         <TextField
           fullWidth
-          label='Title'
+          label='title'
           sx={{ marginY: 2 }}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
