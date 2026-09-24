@@ -6,8 +6,8 @@
 
 再開したらここを見て、当日セクションだけ開く。
 
-- 今日やる日: Day 34
-- 最後に完了した日: Day 33
+- 今日やる日: Day 35
+- 最後に完了した日: Day 34
 
 ## 毎日の手順
 
@@ -49,6 +49,8 @@
 - amazon-cognito-identity-js `6.3.20`
 - react-router `8.4.0`
 - playwright `1.63.0`
+- oxfmt `0.70.0`
+- oxlint `1.79.0`
 
 ### モノレポ
 
@@ -1177,7 +1179,7 @@ Day 41 が終わるまで読まない。本線に載せず、層を壊さない�
 - [x] Day 31 usecase テスト
 - [x] Day 32 auth middleware テスト
 - [x] Day 33 E2E
-- [ ] Day 34 format / lint / 型チェック
+- [x] Day 34 format / lint / 型チェック
 - [ ] Day 35 GitHub Actions
 - [ ] Day 36 請求アラーム / IAM
 - [ ] Day 37 実 Cognito

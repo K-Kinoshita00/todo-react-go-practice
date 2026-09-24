@@ -18,9 +18,42 @@ ps:
 	docker compose ps
 
 lint:
+	make lint-web
+	make lint-api
 
-fmt:
-	cd api && gofmt -w $$(go list -f '{{.Dir}}' ./...)
+lint-web:
+	cd web && pnpm run lint
+
+lint-api:
+	cd api && go vet $$(go list ./... | grep -v /pkg/interface/gen/)
+
+format:
+	make format-web
+	make format-api
+
+format-web:
+	cd web && pnpm run format
+
+format-api:
+	cd api && go fmt $$(go list ./... | grep -v /pkg/interface/gen/)
+
+test:
+	make test-web && make test-api
+
+test-web:
+	cd web && pnpm run test
+
+test-api:
+	cd api && \
+	set -a && source ../.env && \
+	set +a && \
+	go test ./... -count=1
+
+test-e2e:
+	cd web && \
+	set -a && source ../.env && \
+	set +a && \
+	pnpm run test:e2e
 
 gen:
 	make gen-web
@@ -40,21 +73,3 @@ migrate:
 
 migrate-reset:
 	docker compose run --rm -e FLYWAY_CLEAN_DISABLED=false migrate clean && make migrate
-
-test:
-	make test-web && make test-api
-
-test-web:
-	cd web && pnpm run test
-
-test-api:
-	cd api && \
-	set -a && source ../.env && \
-	set +a && \
-	go test ./... -count=1
-
-test-e2e:
-	cd web && \
-	set -a && source ../.env && \
-	set +a && \
-	pnpm run test:e2e

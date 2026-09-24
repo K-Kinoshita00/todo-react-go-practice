@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { describe, expect, it, vi } from 'vitest'
 import useTodoList from './useTodoList'
-import {axios} from "../../../lib/axios"
+import { axios } from '../../../lib/axios'
 
 vi.mock('../../../lib/axios', () => ({
   axios: {

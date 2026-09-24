@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 import TodoList from './TodoList'
 import useTodoList from '../hooks/useTodoList'
 
-vi.mock('../hooks/useTodoList', () => ({ default: vi.fn() }))
+vi.mock('../hooks/useTodoList', () => ({
+  default: vi.fn(),
+}))
 
 describe('TodoList', () => {
   it('一覧を表示する', async () => {

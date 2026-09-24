@@ -1,6 +1,6 @@
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
-import { defineConfig } from 'vitest/config'
+import { defineConfig, configDefaults } from 'vitest/config'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,14 +13,15 @@ export default defineConfig({
         changeOrigin: true, // 転送先のHostヘッダをapi:8080に変更
       },
     },
-    watch:{
+    watch: {
       usePolling: true,
-    }
+    },
   },
   define: {
     global: 'globalThis',
   },
   test: {
     environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'e2e/**'],
   },
 })

@@ -17,9 +17,11 @@ const TodoList = (): React.JSX.Element => {
   const isView = !isError && !isLoading
 
   return (
-    <Box sx={{
-      width: "90vw",
-    }}>
+    <Box
+      sx={{
+        width: '90vw',
+      }}
+    >
       <Button type='button' onClick={() => setOpenCreateTodo(true)}>
         Todo 作成
       </Button>

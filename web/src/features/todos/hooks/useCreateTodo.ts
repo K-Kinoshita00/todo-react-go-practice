@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { CreateTodo } from '../../../lib/openapi/gen/schema'
-import {axios} from "../../../lib/axios"
+import { axios } from '../../../lib/axios'
 
 const useCreateTodo = () => {
   const queryClient = useQueryClient()
@@ -10,7 +10,9 @@ const useCreateTodo = () => {
     },
     onSuccess: () => {
       // todoList の query のキャッシュを更新
-      queryClient.invalidateQueries({ queryKey: ['todoList'] })
+      queryClient.invalidateQueries({
+        queryKey: ['todoList'],
+      })
     },
   })
 }

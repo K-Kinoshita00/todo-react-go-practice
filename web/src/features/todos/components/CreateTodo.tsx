@@ -68,10 +68,20 @@ const CreateTodo = ({ open, onClose }: CreateTodoProps): React.JSX.Element => {
         {error && <Typography color='error'>{error}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' color='inherit' onClick={onClose} disabled={isPending}>
+        <Button
+          variant='contained'
+          color='inherit'
+          onClick={onClose}
+          disabled={isPending}
+        >
           キャンセル
         </Button>
-        <Button variant='contained' color='primary' onClick={handleCreate} disabled={isPending}>
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={handleCreate}
+          disabled={isPending}
+        >
           作成
         </Button>
       </DialogActions>

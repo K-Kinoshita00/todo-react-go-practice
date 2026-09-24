@@ -29,8 +29,8 @@ const DeleteTodo = ({
       await deleteTodo(todo.id)
       onClose()
     } catch (e) {
-        console.error(e)
-        setError(String(e))
+      console.error(e)
+      setError(String(e))
     }
   }, [todo.id, deleteTodo, onClose])
 
@@ -42,10 +42,20 @@ const DeleteTodo = ({
         {error && <Typography color='error'>{error}</Typography>}
       </DialogContent>
       <DialogActions>
-        <Button variant='contained' color='inherit' onClick={onClose} disabled={isPending}>
+        <Button
+          variant='contained'
+          color='inherit'
+          onClick={onClose}
+          disabled={isPending}
+        >
           キャンセル
         </Button>
-        <Button variant='contained' color='error' onClick={handleDelete} disabled={isPending} >
+        <Button
+          variant='contained'
+          color='error'
+          onClick={handleDelete}
+          disabled={isPending}
+        >
           削除
         </Button>
       </DialogActions>
