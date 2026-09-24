@@ -14,7 +14,9 @@ const useUpdateTodo = () => {
     },
     onSuccess: () => {
       // todoList の query のキャッシュを更新
-      queryClient.invalidateQueries({ queryKey: ['todoList'] })
+      queryClient.invalidateQueries({
+        queryKey: ['todoList'],
+      })
     },
   })
 }

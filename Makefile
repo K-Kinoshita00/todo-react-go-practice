@@ -18,9 +18,24 @@ ps:
 	docker compose ps
 
 lint:
+	make lint-web
+	make lint-api
+
+lint-web:
+	cd web && pnpm lint
+
+lint-api:
+	cd api && go vet ./...
 
 fmt:
-	cd api && gofmt -w $$(go list -f '{{.Dir}}' ./...)
+	make fmt-web
+	make fmt-api
+
+fmt-web:
+	cd web && pnpm fmt
+
+fmt-api:
+	cd api && go fmt ./...
 
 gen:
 	make gen-web

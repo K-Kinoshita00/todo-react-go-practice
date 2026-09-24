@@ -10,12 +10,12 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/authservice"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/gen/openapi"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/interface/middleware"
-	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/authservice"
 )
 
 type fakeTodoUseCase struct {

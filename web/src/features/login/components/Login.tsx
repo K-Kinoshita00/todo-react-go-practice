@@ -34,7 +34,7 @@ const Login = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        marginTop: "30vh",
+        marginTop: '30vh',
         marginX: 'auto',
         width: '40%',
         gap: 1,

@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"math/big"
+	"net/http"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 
