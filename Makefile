@@ -25,7 +25,7 @@ lint-web:
 	cd web && pnpm lint
 
 lint-api:
-	cd api && go vet ./...
+	cd api && go vet $$(go list ./... | grep -v /pkg/interface/gen/)
 
 fmt:
 	make fmt-web
@@ -35,7 +35,7 @@ fmt-web:
 	cd web && pnpm fmt
 
 fmt-api:
-	cd api && go fmt ./...
+	cd api && go fmt $$(go list ./... | grep -v /pkg/interface/gen/)
 
 gen:
 	make gen-web
