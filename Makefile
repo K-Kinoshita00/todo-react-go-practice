@@ -55,6 +55,10 @@ test-e2e:
 	set +a && \
 	pnpm run test:e2e
 
+test-e2e-setup:
+	cd web && \
+	pnpm exec playwright install --with-deps
+
 gen:
 	make gen-web
 	make gen-api
