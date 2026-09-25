@@ -8,10 +8,10 @@ env:
   POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
   POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
   POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-  POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-  WEB_PORT: ${{ secrets.WEB_PORT }}
-  API_PORT: ${{ secrets.API_PORT }}
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  WEB_PORT: 3000
+  API_PORT: 8080
   SWAGGER_UI_PORT: ${{ secrets.SWAGGER_UI_PORT }}
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
   JWKS_URL: ${{ secrets.JWKS_URL }}
@@ -28,6 +28,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: ./.github/actions/setup
+      - run: cd web && pnpm run format:check
+      - run: |
+          cd api
+          files=$(gofmt -l $(go list -f '{{.Dir}}' ./... | grep -v /pkg/interface/gen/))
+          test -z "$files"
       - run: make lint
   test:
     runs-on: ubuntu-24.04
@@ -51,4 +56,10 @@ jobs:
           make up
           make migrate
           make test-e2e-setup
-          cd web &&  pnpm run test:e2e
+          ok=0
+          for i in $(seq 1 30); do
+            curl -sf "http://localhost:${WEB_PORT}" && ok=1 && break
+            sleep 2
+          done
+          test "$ok" = 1
+          cd web && pnpm run test:e2e
