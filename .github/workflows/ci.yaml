@@ -12,7 +12,7 @@ env:
   POSTGRES_PORT: 5432
   WEB_PORT: 3000
   API_PORT: 8080
-  SWAGGER_UI_PORT: ${{ secrets.SWAGGER_UI_PORT }}
+  SWAGGER_UI_PORT: 8081
   JWT_SECRET: ${{ secrets.JWT_SECRET }}
   JWKS_URL: ${{ secrets.JWKS_URL }}
   JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
