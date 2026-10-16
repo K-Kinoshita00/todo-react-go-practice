@@ -3,5 +3,4 @@ ID:
   name: id
   required: true
   schema:
-    type: string
-    format: uuid
+    $ref: ../schemas/uuid.yaml#/UUID

@@ -123,7 +123,7 @@ paths:
         - $ref: '#/components/parameters/PageSize'
       responses:
         '200':
-          $ref: '#/components/responses/TodoWithPagination'
+          $ref: '#/components/responses/MemoWithPagination'
         '400':
           $ref: '#/components/responses/BadRequest'
         default:
@@ -220,8 +220,7 @@ components:
       name: id
       required: true
       schema:
-        type: string
-        format: uuid
+        $ref: '#/components/schemas/UUID'
   schemas:
     Error:
       type: object
@@ -237,6 +236,13 @@ components:
           type: string
         message:
           type: string
+    UUID:
+      type: string
+      format: uuid
+      x-go-type: uuid.UUID
+      x-go-type-import:
+        path: uuid
+        name: uuid
     Todo:
       type: object
       required:
@@ -245,8 +251,7 @@ components:
         - status
       properties:
         id:
-          type: string
-          format: uuid
+          $ref: '#/components/schemas/UUID'
         title:
           type: string
         status:
@@ -302,16 +307,6 @@ components:
             - in_progress
             - completed
             - archive
-    CreateMemo:
-      type: object
-      required:
-        - title
-        - content
-      properties:
-        title:
-          type: string
-        content:
-          type: string
     Memo:
       type: object
       required:
@@ -320,8 +315,17 @@ components:
         - content
       properties:
         id:
+          $ref: '#/components/schemas/UUID'
+        title:
           type: string
-          format: uuid
+        content:
+          type: string
+    CreateMemo:
+      type: object
+      required:
+        - title
+        - content
+      properties:
         title:
           type: string
         content:
@@ -380,6 +384,21 @@ components:
             $ref: '#/components/schemas/Error'
     NoContent:
       description: 本文なし、更新または削除に成功
+    MemoWithPagination:
+      description: Success response for Memo with pagination
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Memo'
+              - $ref: '#/components/schemas/Pagination'
     MemoObjective:
       description: Success response for Memo
       content:

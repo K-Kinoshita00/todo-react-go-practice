@@ -1,0 +1,7 @@
+UUID:
+  type: string
+  format: uuid
+  x-go-type: uuid.UUID
+  x-go-type-import:
+    path: uuid
+    name: uuid

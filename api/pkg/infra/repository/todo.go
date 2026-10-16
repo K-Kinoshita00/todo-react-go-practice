@@ -4,8 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-
-	"github.com/google/uuid"
+	"uuid"
 
 	appErr "github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/error"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"

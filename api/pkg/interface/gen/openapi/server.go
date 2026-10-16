@@ -10,8 +10,9 @@ import (
 	"fmt"
 	"net/http"
 
+	uuid "uuid"
+
 	"github.com/oapi-codegen/runtime"
-	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // Defines values for CreateTodoStatus.
@@ -110,9 +111,9 @@ type Error struct {
 
 // Memo defines model for Memo.
 type Memo struct {
-	Content string             `json:"content"`
-	Id      openapi_types.UUID `json:"id"`
-	Title   string             `json:"title"`
+	Content string `json:"content"`
+	Id      UUID   `json:"id"`
+	Title   string `json:"title"`
 }
 
 // Pagination defines model for Pagination.
@@ -124,13 +125,16 @@ type Pagination struct {
 
 // Todo defines model for Todo.
 type Todo struct {
-	Id     openapi_types.UUID `json:"id"`
-	Status TodoStatus         `json:"status"`
-	Title  string             `json:"title"`
+	Id     UUID       `json:"id"`
+	Status TodoStatus `json:"status"`
+	Title  string     `json:"title"`
 }
 
 // TodoStatus defines model for Todo.Status.
 type TodoStatus string
+
+// UUID defines model for UUID.
+type UUID = uuid.UUID
 
 // UpdateMemo defines model for UpdateMemo.
 type UpdateMemo struct {
@@ -148,7 +152,7 @@ type UpdateTodo struct {
 type UpdateTodoStatus string
 
 // ID defines model for ID.
-type ID = openapi_types.UUID
+type ID = UUID
 
 // PageNumber defines model for PageNumber.
 type PageNumber = int
@@ -164,6 +168,14 @@ type InternalServerError = Error
 
 // MemoObjective defines model for MemoObjective.
 type MemoObjective = Memo
+
+// MemoWithPagination defines model for MemoWithPagination.
+type MemoWithPagination struct {
+	Data       []Memo `json:"data"`
+	PageNumber int    `json:"page_number"`
+	PageSize   int    `json:"page_size"`
+	Total      int    `json:"total"`
+}
 
 // NotFound defines model for NotFound.
 type NotFound = Error

@@ -129,9 +129,10 @@ export interface components {
             code: string;
             message: string;
         };
+        /** Format: uuid */
+        UUID: string;
         Todo: {
-            /** Format: uuid */
-            id: string;
+            id: components["schemas"]["UUID"];
             title: string;
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";
@@ -151,13 +152,12 @@ export interface components {
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";
         };
-        CreateMemo: {
+        Memo: {
+            id: components["schemas"]["UUID"];
             title: string;
             content: string;
         };
-        Memo: {
-            /** Format: uuid */
-            id: string;
+        CreateMemo: {
             title: string;
             content: string;
         };
@@ -228,6 +228,17 @@ export interface components {
             };
             content?: never;
         };
+        /** @description Success response for Memo with pagination */
+        MemoWithPagination: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    data: components["schemas"]["Memo"][];
+                } & components["schemas"]["Pagination"];
+            };
+        };
         /** @description Success response for Memo */
         MemoObjective: {
             headers: {
@@ -242,19 +253,20 @@ export interface components {
         PageNumber: number;
         /** @description If you want to fetch all records, specify a negative value. */
         PageSize: number;
-        ID: string;
+        ID: components["schemas"]["UUID"];
     };
     requestBodies: never;
     headers: never;
     pathItems: never;
 }
 export type Error = components['schemas']['Error'];
+export type Uuid = components['schemas']['UUID'];
 export type Todo = components['schemas']['Todo'];
 export type Pagination = components['schemas']['Pagination'];
 export type CreateTodo = components['schemas']['CreateTodo'];
 export type UpdateTodo = components['schemas']['UpdateTodo'];
-export type CreateMemo = components['schemas']['CreateMemo'];
 export type Memo = components['schemas']['Memo'];
+export type CreateMemo = components['schemas']['CreateMemo'];
 export type UpdateMemo = components['schemas']['UpdateMemo'];
 export type ResponseInternalServerError = components['responses']['InternalServerError'];
 export type ResponseTodoWithPagination = components['responses']['TodoWithPagination'];
@@ -263,6 +275,7 @@ export type ResponseCreated = components['responses']['Created'];
 export type ResponseTodoObjective = components['responses']['TodoObjective'];
 export type ResponseNotFound = components['responses']['NotFound'];
 export type ResponseNoContent = components['responses']['NoContent'];
+export type ResponseMemoWithPagination = components['responses']['MemoWithPagination'];
 export type ResponseMemoObjective = components['responses']['MemoObjective'];
 export type ParameterPageNumber = components['parameters']['PageNumber'];
 export type ParameterPageSize = components['parameters']['PageSize'];
@@ -371,7 +384,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["TodoWithPagination"];
+            200: components["responses"]["MemoWithPagination"];
             400: components["responses"]["BadRequest"];
             default: components["responses"]["InternalServerError"];
         };

@@ -21,6 +21,7 @@ import (
 type Handler struct {
 	*handler.HealthHandler
 	*handler.TodoHandler
+	*handler.MemoHandler
 }
 
 func NewHandler() *Handler {
@@ -42,12 +43,16 @@ func NewRegistry() (http.Handler, error) {
 		return nil, err
 	}
 
-	cmd := repository.NewTodoRepository(db)
-	query := repository.NewTodoQueryRepository(db)
-	uc := usecase.NewTodoUseCase(cmd, query)
+	todoCmd := repository.NewTodoRepository(db)
+	todoQuery := repository.NewTodoQueryRepository(db)
+	todoUc := usecase.NewTodoUseCase(todoCmd, todoQuery)
+	memoCmd := repository.NewMemoRepository(db)
+	memoQuery := repository.NewMemoQueryRepository(db)
+	memoUc := usecase.NewMemoUseCase(memoCmd, memoQuery)
 	h := &Handler{
 		HealthHandler: handler.NewHealthHandler(),
-		TodoHandler:   handler.NewTodoHandler(uc),
+		TodoHandler:   handler.NewTodoHandler(todoUc),
+		MemoHandler:   handler.NewMemoHandler(memoUc),
 	}
 	var authMode = os.Getenv("AUTH_MODE")
 	var a authservice.AuthService

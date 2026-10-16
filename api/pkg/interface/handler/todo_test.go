@@ -7,8 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/google/uuid"
+	"uuid"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/authservice"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"

@@ -133,7 +133,7 @@ paths:
         - $ref: './parameters/pagination.yaml#/PageSize'
       responses:
         200:
-          $ref: './responses/todo.yaml#/TodoWithPagination'
+          $ref: './responses/memo.yaml#/MemoWithPagination'
         400:
           $ref: './responses/error.yaml#/BadRequest'
         default:

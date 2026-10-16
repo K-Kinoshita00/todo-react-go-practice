@@ -6,8 +6,7 @@ Todo:
     - status
   properties:
     id:
-      type: string
-      format: uuid
+      $ref: './uuid.yaml#/UUID'
     title:
       type: string
     status:

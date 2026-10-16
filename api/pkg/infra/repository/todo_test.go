@@ -3,8 +3,7 @@ package repository
 import (
 	"context"
 	"testing"
-
-	"github.com/google/uuid"
+	"uuid"
 
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/application/dto"
 	"github.com/K-Kinoshita00/todo-react-go-practice/pkg/domain/entity"

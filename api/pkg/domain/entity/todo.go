@@ -2,8 +2,7 @@ package entity
 
 import (
 	"errors"
-
-	"github.com/google/uuid"
+	"uuid"
 )
 
 type TodoStatus string
