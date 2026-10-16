@@ -1,0 +1,22 @@
+MemoWithPagination:
+  description: Success response for Memo with pagination
+  content:
+    application/json:
+      schema:
+        allOf:
+          - type: object
+            required:
+              - data
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../schemas/memo.yaml#/Memo'
+          - $ref: '../schemas/pagination.yaml#/Pagination'
+
+MemoObjective:
+  description: Success response for Memo
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/memo.yaml#/Memo'

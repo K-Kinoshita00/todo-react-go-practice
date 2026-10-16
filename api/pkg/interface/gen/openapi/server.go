@@ -86,6 +86,12 @@ func (e UpdateTodoStatus) Valid() bool {
 	}
 }
 
+// CreateMemo defines model for CreateMemo.
+type CreateMemo struct {
+	Content string `json:"content"`
+	Title   string `json:"title"`
+}
+
 // CreateTodo defines model for CreateTodo.
 type CreateTodo struct {
 	Status CreateTodoStatus `json:"status"`
@@ -100,6 +106,13 @@ type Error struct {
 	Code       string `json:"code"`
 	Message    string `json:"message"`
 	StatusCode int    `json:"status_code"`
+}
+
+// Memo defines model for Memo.
+type Memo struct {
+	Content string             `json:"content"`
+	Id      openapi_types.UUID `json:"id"`
+	Title   string             `json:"title"`
 }
 
 // Pagination defines model for Pagination.
@@ -118,6 +131,12 @@ type Todo struct {
 
 // TodoStatus defines model for Todo.Status.
 type TodoStatus string
+
+// UpdateMemo defines model for UpdateMemo.
+type UpdateMemo struct {
+	Content string `json:"content"`
+	Title   string `json:"title"`
+}
 
 // UpdateTodo defines model for UpdateTodo.
 type UpdateTodo struct {
@@ -143,6 +162,9 @@ type BadRequest = Error
 // InternalServerError defines model for InternalServerError.
 type InternalServerError = Error
 
+// MemoObjective defines model for MemoObjective.
+type MemoObjective = Memo
+
 // NotFound defines model for NotFound.
 type NotFound = Error
 
@@ -157,6 +179,14 @@ type TodoWithPagination struct {
 	Total      int    `json:"total"`
 }
 
+// ListMemosParams defines parameters for ListMemos.
+type ListMemosParams struct {
+	PageNumber *PageNumber `form:"page_number,omitempty" json:"page_number,omitempty"`
+
+	// PageSize If you want to fetch all records, specify a negative value.
+	PageSize *PageSize `form:"page_size,omitempty" json:"page_size,omitempty"`
+}
+
 // ListTodosParams defines parameters for ListTodos.
 type ListTodosParams struct {
 	PageNumber *PageNumber `form:"page_number,omitempty" json:"page_number,omitempty"`
@@ -164,6 +194,12 @@ type ListTodosParams struct {
 	// PageSize If you want to fetch all records, specify a negative value.
 	PageSize *PageSize `form:"page_size,omitempty" json:"page_size,omitempty"`
 }
+
+// CreateMemoJSONRequestBody defines body for CreateMemo for application/json ContentType.
+type CreateMemoJSONRequestBody = CreateMemo
+
+// UpdateMemoJSONRequestBody defines body for UpdateMemo for application/json ContentType.
+type UpdateMemoJSONRequestBody = UpdateMemo
 
 // CreateTodoJSONRequestBody defines body for CreateTodo for application/json ContentType.
 type CreateTodoJSONRequestBody = CreateTodo
@@ -176,6 +212,21 @@ type ServerInterface interface {
 	// GetHealth Health Application check
 	// (GET /health)
 	GetHealth(w http.ResponseWriter, r *http.Request)
+	// ListMemos list Memos
+	// (GET /memos)
+	ListMemos(w http.ResponseWriter, r *http.Request, params ListMemosParams)
+	// CreateMemo create Memo
+	// (POST /memos)
+	CreateMemo(w http.ResponseWriter, r *http.Request)
+	// DeleteMemo delete Memo
+	// (DELETE /memos/{id})
+	DeleteMemo(w http.ResponseWriter, r *http.Request, id ID)
+	// GetMemoByID get Memo By ID
+	// (GET /memos/{id})
+	GetMemoByID(w http.ResponseWriter, r *http.Request, id ID)
+	// UpdateMemo update Memo
+	// (PATCH /memos/{id})
+	UpdateMemo(w http.ResponseWriter, r *http.Request, id ID)
 	// ListTodos list Todos
 	// (GET /todos)
 	ListTodos(w http.ResponseWriter, r *http.Request, params ListTodosParams)
@@ -207,6 +258,144 @@ func (siw *ServerInterfaceWrapper) GetHealth(w http.ResponseWriter, r *http.Requ
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetHealth(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// ListMemos operation middleware
+func (siw *ServerInterfaceWrapper) ListMemos(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params ListMemosParams
+
+	// ------------- Optional query parameter "page_number" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "page_number", r.URL.Query(), &params.PageNumber, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "page_number"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "page_number", Err: err})
+		}
+		return
+	}
+
+	// ------------- Optional query parameter "page_size" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "page_size", r.URL.Query(), &params.PageSize, runtime.BindQueryParameterOptions{Type: "integer", Format: ""})
+	if err != nil {
+		var requiredError *runtime.RequiredParameterError
+		if errors.As(err, &requiredError) {
+			siw.ErrorHandlerFunc(w, r, &RequiredParamError{ParamName: "page_size"})
+		} else {
+			siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "page_size", Err: err})
+		}
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ListMemos(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CreateMemo operation middleware
+func (siw *ServerInterfaceWrapper) CreateMemo(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateMemo(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteMemo operation middleware
+func (siw *ServerInterfaceWrapper) DeleteMemo(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "id" -------------
+	var id ID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "uuid", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteMemo(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetMemoByID operation middleware
+func (siw *ServerInterfaceWrapper) GetMemoByID(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "id" -------------
+	var id ID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "uuid", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetMemoByID(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateMemo operation middleware
+func (siw *ServerInterfaceWrapper) UpdateMemo(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "id" -------------
+	var id ID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "string", Format: "uuid", ValueIsUnescaped: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateMemo(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -480,6 +669,11 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc(http.MethodDelete+" "+options.BaseURL+"/todos/{id}", wrapper.DeleteTodo)
 	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/todos/{id}", wrapper.GetTodoByID)
 	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/todos/{id}", wrapper.UpdateTodo)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/memos", wrapper.ListMemos)
+	m.HandleFunc(http.MethodPost+" "+options.BaseURL+"/memos", wrapper.CreateMemo)
+	m.HandleFunc(http.MethodDelete+" "+options.BaseURL+"/memos/{id}", wrapper.DeleteMemo)
+	m.HandleFunc(http.MethodGet+" "+options.BaseURL+"/memos/{id}", wrapper.GetMemoByID)
+	m.HandleFunc(http.MethodPatch+" "+options.BaseURL+"/memos/{id}", wrapper.UpdateMemo)
 
 	return m
 }

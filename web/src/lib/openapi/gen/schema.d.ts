@@ -83,6 +83,43 @@ export interface paths {
         patch: operations["updateTodo"];
         trace?: never;
     };
+    "/memos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** list Memos */
+        get: operations["listMemos"];
+        put?: never;
+        /** create Memo */
+        post: operations["createMemo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/memos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** get Memo By ID */
+        get: operations["getMemoByID"];
+        put?: never;
+        post?: never;
+        /** delete Memo */
+        delete: operations["deleteMemo"];
+        options?: never;
+        head?: never;
+        /** update Memo */
+        patch: operations["updateMemo"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -113,6 +150,20 @@ export interface components {
             title: string;
             /** @enum {string} */
             status: "not_started" | "in_progress" | "completed" | "archive";
+        };
+        CreateMemo: {
+            title: string;
+            content: string;
+        };
+        Memo: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            content: string;
+        };
+        UpdateMemo: {
+            title: string;
+            content: string;
         };
     };
     responses: {
@@ -177,6 +228,15 @@ export interface components {
             };
             content?: never;
         };
+        /** @description Success response for Memo */
+        MemoObjective: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["Memo"];
+            };
+        };
     };
     parameters: {
         PageNumber: number;
@@ -193,6 +253,9 @@ export type Todo = components['schemas']['Todo'];
 export type Pagination = components['schemas']['Pagination'];
 export type CreateTodo = components['schemas']['CreateTodo'];
 export type UpdateTodo = components['schemas']['UpdateTodo'];
+export type CreateMemo = components['schemas']['CreateMemo'];
+export type Memo = components['schemas']['Memo'];
+export type UpdateMemo = components['schemas']['UpdateMemo'];
 export type ResponseInternalServerError = components['responses']['InternalServerError'];
 export type ResponseTodoWithPagination = components['responses']['TodoWithPagination'];
 export type ResponseBadRequest = components['responses']['BadRequest'];
@@ -200,6 +263,7 @@ export type ResponseCreated = components['responses']['Created'];
 export type ResponseTodoObjective = components['responses']['TodoObjective'];
 export type ResponseNotFound = components['responses']['NotFound'];
 export type ResponseNoContent = components['responses']['NoContent'];
+export type ResponseMemoObjective = components['responses']['MemoObjective'];
 export type ParameterPageNumber = components['parameters']['PageNumber'];
 export type ParameterPageSize = components['parameters']['PageSize'];
 export type ParameterId = components['parameters']['ID'];
@@ -285,6 +349,95 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateTodo"];
+            };
+        };
+        responses: {
+            204: components["responses"]["NoContent"];
+            400: components["responses"]["BadRequest"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["InternalServerError"];
+        };
+    };
+    listMemos: {
+        parameters: {
+            query?: {
+                page_number?: components["parameters"]["PageNumber"];
+                /** @description If you want to fetch all records, specify a negative value. */
+                page_size?: components["parameters"]["PageSize"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["TodoWithPagination"];
+            400: components["responses"]["BadRequest"];
+            default: components["responses"]["InternalServerError"];
+        };
+    };
+    createMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMemo"];
+            };
+        };
+        responses: {
+            201: components["responses"]["Created"];
+            400: components["responses"]["BadRequest"];
+            default: components["responses"]["InternalServerError"];
+        };
+    };
+    getMemoByID: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ID"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["MemoObjective"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["InternalServerError"];
+        };
+    };
+    deleteMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ID"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: components["responses"]["NoContent"];
+            404: components["responses"]["NotFound"];
+            default: components["responses"]["InternalServerError"];
+        };
+    };
+    updateMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: components["parameters"]["ID"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMemo"];
             };
         };
         responses: {

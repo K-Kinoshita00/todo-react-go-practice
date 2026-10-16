@@ -1,0 +1,14 @@
+Memo:
+  type: object
+  required:
+    - id
+    - title
+    - content
+  properties:
+    id:
+      type: string
+      format: uuid
+    title:
+      type: string
+    content:
+      type: string

@@ -11,6 +11,7 @@ servers:
 tags:
   - name: Health
   - name: Todo
+  - name: Memo
 
 paths:
   /health:
@@ -111,6 +112,97 @@ paths:
       summary: delete Todo
       tags:
         - Todo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      responses:
+        204:
+          $ref: './responses/success.yaml#/NoContent'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+  /memos:
+    get:
+      operationId: listMemos
+      summary: list Memos
+      tags:
+        - Memo
+      parameters:
+        - $ref: './parameters/pagination.yaml#/PageNumber'
+        - $ref: './parameters/pagination.yaml#/PageSize'
+      responses:
+        200:
+          $ref: './responses/todo.yaml#/TodoWithPagination'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    post:
+      operationId: createMemo
+      summary: create Memo
+      tags:
+        - Memo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './parameters/memo.yaml#/CreateMemo'
+      responses:
+        201:
+          $ref: './responses/success.yaml#/Created'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+
+  /memos/{id}:
+    get:
+      operationId: getMemoByID
+      summary: get Memo By ID
+      tags:
+        - Memo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      responses:
+        200:
+          $ref: './responses/memo.yaml#/MemoObjective'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    patch:
+      operationId: updateMemo
+      summary: update Memo
+      tags:
+        - Memo
+      parameters:
+        - $ref: './parameters/id.yaml#/ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './parameters/memo.yaml#/UpdateMemo'
+      responses:
+        204:
+          $ref: './responses/success.yaml#/NoContent'
+        400:
+          $ref: './responses/error.yaml#/BadRequest'
+        404:
+          $ref: './responses/error.yaml#/NotFound'
+        default:
+          $ref: './responses/error.yaml#/InternalServerError'
+
+    delete:
+      operationId: deleteMemo
+      summary: delete Memo
+      tags:
+        - Memo
       parameters:
         - $ref: './parameters/id.yaml#/ID'
       responses:

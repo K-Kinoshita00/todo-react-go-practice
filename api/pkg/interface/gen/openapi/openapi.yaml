@@ -8,6 +8,7 @@ servers:
 tags:
   - name: Health
   - name: Todo
+  - name: Memo
 paths:
   /health:
     get:
@@ -102,6 +103,91 @@ paths:
       summary: delete Todo
       tags:
         - Todo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /memos:
+    get:
+      operationId: listMemos
+      summary: list Memos
+      tags:
+        - Memo
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          $ref: '#/components/responses/TodoWithPagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      operationId: createMemo
+      summary: create Memo
+      tags:
+        - Memo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemo'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /memos/{id}:
+    get:
+      operationId: getMemoByID
+      summary: get Memo By ID
+      tags:
+        - Memo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      responses:
+        '200':
+          $ref: '#/components/responses/MemoObjective'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      operationId: updateMemo
+      summary: update Memo
+      tags:
+        - Memo
+      parameters:
+        - $ref: '#/components/parameters/ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMemo'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteMemo
+      summary: delete Memo
+      tags:
+        - Memo
       parameters:
         - $ref: '#/components/parameters/ID'
       responses:
@@ -216,6 +302,40 @@ components:
             - in_progress
             - completed
             - archive
+    CreateMemo:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    Memo:
+      type: object
+      required:
+        - id
+        - title
+        - content
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+    UpdateMemo:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+        content:
+          type: string
   responses:
     InternalServerError:
       description: 予期せぬエラー
@@ -260,3 +380,9 @@ components:
             $ref: '#/components/schemas/Error'
     NoContent:
       description: 本文なし、更新または削除に成功
+    MemoObjective:
+      description: Success response for Memo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Memo'
